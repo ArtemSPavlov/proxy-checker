@@ -12,8 +12,12 @@ export class AuthService {
      * @returns token
      */
     async getToken(user: User): Promise<string> {
-        const payload = { uuid: user.uuid },
-              expiresIn = { expiresIn: '24h' };
+        const payload = {
+            uuid: user.uuid,
+            role: user.role,
+            isActive: user.isActive
+         },
+              expiresIn = { expiresIn: process.env.TOKEN_LIFE_TIME };
 
         return jwt.sign(payload, process.env.JWT_SECRET, expiresIn);
     }

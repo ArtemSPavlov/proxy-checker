@@ -3,13 +3,13 @@ import { ApiBody, ApiTags } from '@nestjs/swagger';
 
 import { ProxyService } from './proxy.service';
 import { AddProxyDto } from '../common/dto/addProxy.dto';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { UserGuard } from 'src/auth/user.guard';
 
 @Controller('proxy')
 export class ProxyController {
     constructor(private readonly proxyService: ProxyService){}
 
-    @UseGuards(JwtAuthGuard)
+    @UseGuards(UserGuard)
     @Get()
     async getProxy(){
         // const proxyList = await this.proxyService.getActiveProxies();

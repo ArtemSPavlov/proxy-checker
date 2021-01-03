@@ -1,6 +1,7 @@
 import { Body, Controller, Get, Post, UsePipes, UseGuards, Req, UseInterceptors, ClassSerializerInterceptor, Patch, Put, Delete, Query, Param, ParseIntPipe } from '@nestjs/common';
 
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { UserGuard } from '../auth/user.guard';
+import { AdminGuard } from 'src/auth/admin.guard';
 import { UserService } from './user.service';
 import { User } from './user.entity';
 import { CreateUserDto } from './dto/createUser.dto';
@@ -16,7 +17,7 @@ export class UserController {
 
     // @UseInterceptors(ClassSerializerInterceptor)
     // @Get()
-    // @UseGuards(JwtAuthGuard)
+    // @UseGuards(UserGuard)
     // @ApiTags('user')
     // async user(@Req() req: any): Promise<User>{
     //     return this.userService.getUser(req.user);
@@ -53,7 +54,7 @@ export class UserController {
     }
 
     @Put('edit/:id')
-    @UseGuards(JwtAuthGuard)
+    @UseGuards(AdminGuard)
     async edit(
         @Param('id', ParseIntPipe) id: string,
         @Body() editUserDto: EditUserDto
@@ -62,7 +63,7 @@ export class UserController {
     }
 
     // @Get('list/:count')
-    // @UseGuards(JwtAuthGuard)
+    // @UseGuards(AdminGuard)
     // @UseInterceptors(ClassSerializerInterceptor)
     // async list(
     //     @Param('count', ParseIntPipe) count: string
@@ -71,7 +72,7 @@ export class UserController {
     // }
 
     @Delete('delete/:id')
-    @UseGuards(JwtAuthGuard)
+    @UseGuards(AdminGuard)
     async delete(
         @Param('id', ParseIntPipe) id: string,
     ): Promise<string>{
@@ -79,13 +80,13 @@ export class UserController {
     }
 
     // @Get('profile')
-    // @UseGuards(JwtAuthGuard)
+    // @UseGuards(UserGuard)
     // async profile(): Promise<User>{
     //     return "Profile endpoint";
     // }
 
     @Patch('password')
-    @UseGuards(JwtAuthGuard)
+    @UseGuards(UserGuard)
     async password(
         @Body() password: changePasswordDto
     ): Promise<string>{
@@ -93,7 +94,7 @@ export class UserController {
     }
 
     @Put('change')
-    @UseGuards(JwtAuthGuard)
+    @UseGuards(UserGuard)
     async change(
         @Body() editUserDto: EditUserDto
     ): Promise<string>{
@@ -101,7 +102,7 @@ export class UserController {
     }
 
     @Get('logout')
-    @UseGuards(JwtAuthGuard)
+    @UseGuards(AdminGuard)
     async logout(): Promise<string>{
         return "Logout endpoint";
     }
