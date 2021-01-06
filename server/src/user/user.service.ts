@@ -108,4 +108,10 @@ export class UserService {
 
         return 'User deleted!';
     }
+
+    async editAuthorizedUser(user: User, dto: EditUserDto): Promise<User>{
+        await this.usersRepository.update({uuid: user.uuid}, dto);
+
+        return await this.usersRepository.findOne({uuid: user.uuid});
+    }
 }

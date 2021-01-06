@@ -8,11 +8,6 @@ export class EditUserDto {
     @IsNotEmpty()
     login?: string;
 
-    @IsString()
-    @Length(3)
-    @IsNotEmpty()
-    password?: string;
-
     isActive?: boolean;
 
     role?: Roles;

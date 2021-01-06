@@ -97,10 +97,13 @@ export class UserController {
 
     @Put('change')
     @UseGuards(UserGuard)
-    async change(
+    async changeUser(
+        @Req() req: any,
         @Body() editUserDto: EditUserDto
-    ): Promise<string>{
-        return "Change endpoint";
+    ): Promise<User>{
+        const user = {...req.user};
+
+        return this.userService.editAuthorizedUser(user, editUserDto);
     }
 
     @Get('logout')
