@@ -10,6 +10,7 @@ import { ValidateUserDto } from './dto/validateUser.dto';
 import { AuthService } from '../auth/auth.service';
 import { Payload } from '../common/interfaces/payload.interface';
 import { Tokens } from './types/tokens.type';
+import { EditUserDto } from './dto/editUser.dto';
 
 @Injectable()
 export class UserService {
@@ -88,5 +89,10 @@ export class UserService {
         } catch (error) {
             throw new UnauthorizedException('Refresh token not valid');
         }
+    }
+
+    async editUser(id: number, dto: EditUserDto): Promise<string>{
+        await this.usersRepository.update({id: id}, dto);
+        return 'User updated!';
     }
 }

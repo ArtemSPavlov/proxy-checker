@@ -38,7 +38,7 @@ export class UserController {
     @UsePipes(new ValidationPipe())
     async signIn(
         @Body() validateUserDto: ValidateUserDto
-    ): Promise<Object>{
+    ): Promise<Tokens>{
         return this.userService.validateUser(validateUserDto);
     }
 
@@ -65,10 +65,10 @@ export class UserController {
     @Put('edit/:id')
     @UseGuards(AdminGuard)
     async edit(
-        @Param('id', ParseIntPipe) id: string,
+        @Param('id', ParseIntPipe) id: number,
         @Body() editUserDto: EditUserDto
     ): Promise<string>{
-        return `Edit endpoint: ${id}`;
+        return this.userService.editUser(id, editUserDto);
     }
 
     // @Get('list/:count')
