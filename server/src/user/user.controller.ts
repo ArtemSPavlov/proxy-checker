@@ -10,6 +10,8 @@ import { ValidationPipe } from '../common/validation.pipe';
 import { UserEmailDto } from './dto/userEmail.dto';
 import { EditUserDto } from './dto/editUser.dto';
 import { changePasswordDto } from './dto/changePassword.dto';
+import { Tokens } from './types/tokens.type';
+import { RefreshTokenDto } from './dto/refreshToken.dto';
 
 @Controller('user')
 export class UserController {
@@ -36,8 +38,15 @@ export class UserController {
     @UsePipes(new ValidationPipe())
     async signIn(
         @Body() validateUserDto: ValidateUserDto
-    ): Promise<string>{
+    ): Promise<Object>{
         return this.userService.validateUser(validateUserDto);
+    }
+
+    @Post('change-tokens')
+    async getNewTokens(
+        @Body() token: RefreshTokenDto
+    ): Promise<Tokens>{
+        return this.userService.refreshTokens(token.refreshToken);
     }
 
     @Post('activation')

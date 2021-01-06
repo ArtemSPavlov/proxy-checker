@@ -1,13 +1,15 @@
-import { BadRequestException, HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
+import * as jwt from 'jsonwebtoken';
 
 import { User } from './user.entity';
 import { CreateUserDto } from './dto/createUser.dto';
 import { ValidateUserDto } from './dto/validateUser.dto';
 import { AuthService } from '../auth/auth.service';
 import { Payload } from '../common/interfaces/payload.interface';
+import { Tokens } from './types/tokens.type';
 
 @Injectable()
 export class UserService {
@@ -44,11 +46,17 @@ export class UserService {
      * @param dto
      * @returns user
      */
-    async validateUser(dto: ValidateUserDto): Promise<string>{
+    async validateUser(dto: ValidateUserDto): Promise<Tokens>{
         const user = await this.usersRepository.findOne({email: dto.email});
         if(await bcrypt.compare(dto.password, user.password)){
             user.password = dto.password;
-            return this.authService.getToken(user);
+            const refreshToken = await (await this.authService.getRefreshToken(user)).token;
+            const accessToken = await this.authService.getAccessToken(user);
+
+            return {
+                refresh_token: refreshToken,
+                access_token: accessToken
+            }
         }
         throw new HttpException('Email or password incorrect!', HttpStatus.BAD_REQUEST);
     }
@@ -60,5 +68,25 @@ export class UserService {
      */
     private async checkEmailExists(dto: CreateUserDto): Promise<number> {
         return this.usersRepository.count({email: dto.email});
+    }
+
+    async refreshTokens(refreshToken: string): Promise<Tokens>{
+        try {
+            const tokenPayload = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+            const tokenStatus = await this.authService.checkRefreshToken(refreshToken);
+
+            if(!!tokenStatus && 'object' === typeof(tokenPayload) && tokenPayload.hasOwnProperty('uuid')){
+                const user = await this.usersRepository.findOne({uuid: tokenPayload['uuid']});
+                const refreshToken = await (await this.authService.getRefreshToken(user)).token;
+                const accessToken = await this.authService.getAccessToken(user);
+
+                return {
+                    refresh_token: refreshToken,
+                    access_token: accessToken
+                }
+            }
+        } catch (error) {
+            throw new UnauthorizedException('Refresh token not valid');
+        }
     }
 }
