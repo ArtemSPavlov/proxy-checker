@@ -71,14 +71,13 @@ export class UserController {
         return this.userService.editUser(id, editUserDto);
     }
 
-    // @Get('list/:count')
-    // @UseGuards(AdminGuard)
-    // @UseInterceptors(ClassSerializerInterceptor)
-    // async list(
-    //     @Param('count', ParseIntPipe) count: string
-    // ): Promise<User[]>{
-    //     return "List endpoint";
-    // }
+    @Get('list')
+    @UseGuards(AdminGuard)
+    @UseInterceptors(ClassSerializerInterceptor)
+    async listOfUsers(
+    ): Promise<User[]>{
+        return this.userService.getUsersList();
+    }
 
     @Delete('delete/:id')
     @UseGuards(AdminGuard)

@@ -95,4 +95,8 @@ export class UserService {
         await this.usersRepository.update({id: id}, dto);
         return 'User updated!';
     }
+
+    async getUsersList(): Promise<User[]>{
+        return await this.usersRepository.find();
+    }
 }
