@@ -99,4 +99,13 @@ export class UserService {
     async getUsersList(): Promise<User[]>{
         return await this.usersRepository.find();
     }
+
+    async deleteUser(id: number): Promise<string>{
+        const user = new User();
+        user.id = id;
+
+        await this.usersRepository.remove(user);
+
+        return 'User deleted!';
+    }
 }

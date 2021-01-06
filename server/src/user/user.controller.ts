@@ -17,13 +17,12 @@ import { RefreshTokenDto } from './dto/refreshToken.dto';
 export class UserController {
     constructor(private userService: UserService){}
 
-    // @UseInterceptors(ClassSerializerInterceptor)
-    // @Get()
-    // @UseGuards(UserGuard)
-    // @ApiTags('user')
-    // async user(@Req() req: any): Promise<User>{
-    //     return this.userService.getUser(req.user);
-    // }
+    @UseInterceptors(ClassSerializerInterceptor)
+    @Get()
+    @UseGuards(UserGuard)
+    async userProfile(@Req() req: any): Promise<User>{
+        return this.userService.getUser(req.user);
+    }
 
     @Post('registration')
     @UsePipes(new ValidationPipe())
@@ -82,16 +81,11 @@ export class UserController {
     @Delete('delete/:id')
     @UseGuards(AdminGuard)
     async delete(
-        @Param('id', ParseIntPipe) id: string,
+        @Param('id', ParseIntPipe) id: number,
     ): Promise<string>{
-        return "Delete user endpoint";
+        return this.userService.deleteUser(id);
     }
 
-    // @Get('profile')
-    // @UseGuards(UserGuard)
-    // async profile(): Promise<User>{
-    //     return "Profile endpoint";
-    // }
 
     @Patch('password')
     @UseGuards(UserGuard)
