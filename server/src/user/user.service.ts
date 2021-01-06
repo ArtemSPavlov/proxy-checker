@@ -11,6 +11,7 @@ import { AuthService } from '../auth/auth.service';
 import { Payload } from '../common/interfaces/payload.interface';
 import { Tokens } from './types/tokens.type';
 import { EditUserDto } from './dto/editUser.dto';
+import { ChangePasswordDto } from './dto/changePassword.dto';
 
 @Injectable()
 export class UserService {
@@ -113,5 +114,12 @@ export class UserService {
         await this.usersRepository.update({uuid: user.uuid}, dto);
 
         return await this.usersRepository.findOne({uuid: user.uuid});
+    }
+
+    async changeAuthorizedUserPassword(user: User, dto: ChangePasswordDto): Promise<string>{
+        const hash = await bcrypt.hash(dto.password, 10);
+        await this.usersRepository.update({uuid: user.uuid}, {password: hash});
+
+        return 'Password change!'
     }
 }

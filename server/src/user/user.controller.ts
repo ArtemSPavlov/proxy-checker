@@ -9,7 +9,7 @@ import { ValidateUserDto } from './dto/validateUser.dto';
 import { ValidationPipe } from '../common/validation.pipe';
 import { UserEmailDto } from './dto/userEmail.dto';
 import { EditUserDto } from './dto/editUser.dto';
-import { changePasswordDto } from './dto/changePassword.dto';
+import { ChangePasswordDto } from './dto/changePassword.dto';
 import { Tokens } from './types/tokens.type';
 import { RefreshTokenDto } from './dto/refreshToken.dto';
 
@@ -87,13 +87,6 @@ export class UserController {
     }
 
 
-    @Patch('password')
-    @UseGuards(UserGuard)
-    async password(
-        @Body() password: changePasswordDto
-    ): Promise<string>{
-        return "Password endpoint";
-    }
 
     @Put('change')
     @UseGuards(UserGuard)
@@ -104,6 +97,17 @@ export class UserController {
         const user = {...req.user};
 
         return this.userService.editAuthorizedUser(user, editUserDto);
+    }
+
+    @Patch('password')
+    @UseGuards(UserGuard)
+    async password(
+        @Req() req: any,
+        @Body() password: ChangePasswordDto
+    ): Promise<string>{
+        const user = {...req.user};
+
+        return this.userService.changeAuthorizedUserPassword(user, password);
     }
 
     @Get('logout')
