@@ -11,8 +11,6 @@ import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { AuthService } from './auth/auth.service';
 import { ProxyModule } from './proxy/proxy.module';
-import { ParserModule } from './parser/parser.module';
-import { ProxySource } from './parser/proxy-source.entity';
 
 @Module({
   imports: [
@@ -27,13 +25,12 @@ import { ProxySource } from './parser/proxy-source.entity';
       username: process.env.POSTGRES_USER,
       password: process.env.POSTGRES_PASSWORD,
       database: process.env.POSTGRES_DB,
-      entities: [User, Proxy, Token, ProxySource],
+      entities: [User, Proxy, Token],
       synchronize: true,
     }),
     UserModule,
     AuthModule,
     ProxyModule,
-    ParserModule,
     TypeOrmModule.forFeature([Token]),
   ],
   controllers: [AppController],
