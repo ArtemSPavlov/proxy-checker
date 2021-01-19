@@ -34,12 +34,14 @@ export class UserService {
      * @param dto
      * @returns user
      */
-    async createUser(dto: CreateUserDto): Promise<User>{
+    async createUser(dto: CreateUserDto): Promise<string>{
         if(await this.checkEmailExists(dto)){
             throw new HttpException("Email has been used", HttpStatus.BAD_REQUEST);
         } else {
             const hash = await bcrypt.hash(dto.password, 10);
-            return this.usersRepository.save({login: dto.login, password: hash, email: dto.email});
+            const newUser = await this.usersRepository.save({login: dto.login, password: hash, email: dto.email});
+
+            return `User ${newUser.login} has been created!`;
         }
     }
 
@@ -50,14 +52,16 @@ export class UserService {
      */
     async validateUser(dto: ValidateUserDto): Promise<Tokens>{
         const user = await this.usersRepository.findOne({email: dto.email});
-        if(await bcrypt.compare(dto.password, user.password)){
-            user.password = dto.password;
-            const refreshToken = await (await this.authService.getRefreshToken(user)).token;
-            const accessToken = await this.authService.getAccessToken(user);
+        if(user){
+            if(await bcrypt.compare(dto.password, user.password)){
+                user.password = dto.password;
+                const refreshToken = await (await this.authService.getRefreshToken(user)).token;
+                const accessToken = await this.authService.getAccessToken(user);
 
-            return {
-                refresh_token: refreshToken,
-                access_token: accessToken
+                return {
+                    refresh_token: refreshToken,
+                    access_token: accessToken
+                }
             }
         }
         throw new HttpException('Email or password incorrect!', HttpStatus.BAD_REQUEST);
@@ -105,9 +109,9 @@ export class UserService {
         const user = new User();
         user.id = id;
 
-        await this.usersRepository.remove(user);
+        const deletedUser = await this.usersRepository.remove(user);
 
-        return 'User deleted!';
+        return `User ${deletedUser.login} deleted!`;
     }
 
     async editAuthorizedUser(user: User, dto: EditUserDto): Promise<User>{
@@ -120,6 +124,6 @@ export class UserService {
         const hash = await bcrypt.hash(dto.password, 10);
         await this.usersRepository.update({uuid: user.uuid}, {password: hash});
 
-        return 'Password change!'
+        return 'Password change!';
     }
 }

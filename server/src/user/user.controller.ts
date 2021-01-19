@@ -1,13 +1,12 @@
 import { Body, Controller, Get, Post, UsePipes, UseGuards, Req, UseInterceptors, ClassSerializerInterceptor, Patch, Put, Delete, Query, Param, ParseIntPipe, HttpException, HttpStatus } from '@nestjs/common';
 
 import { UserGuard } from '../auth/user.guard';
-import { AdminGuard } from 'src/auth/admin.guard';
+import { AdminGuard } from '../auth/admin.guard';
 import { UserService } from './user.service';
 import { User } from './user.entity';
 import { CreateUserDto } from './dto/createUser.dto';
 import { ValidateUserDto } from './dto/validateUser.dto';
 import { ValidationPipe } from '../common/validation.pipe';
-import { UserEmailDto } from './dto/userEmail.dto';
 import { EditUserDto } from './dto/editUser.dto';
 import { ChangePasswordDto } from './dto/changePassword.dto';
 import { Tokens } from './types/tokens.type';
@@ -20,16 +19,18 @@ export class UserController {
     @UseInterceptors(ClassSerializerInterceptor)
     @Get()
     @UseGuards(UserGuard)
-    async userProfile(@Req() req: any): Promise<User>{
+    async userProfile(
+        @Req() req: any
+    ): Promise<User> {
         return this.userService.getUser(req.user);
     }
 
+    @UseInterceptors(ClassSerializerInterceptor)
     @Post('registration')
     @UsePipes(new ValidationPipe())
-    @UseInterceptors(ClassSerializerInterceptor)
     async createUser(
         @Body() createUserDto: CreateUserDto
-    ): Promise<User> {
+    ): Promise<string> {
         return this.userService.createUser(createUserDto);
     }
 
@@ -41,23 +42,17 @@ export class UserController {
         return this.userService.validateUser(validateUserDto);
     }
 
-    @Post('change-tokens')
+    @Post('refresh-tokens')
     async getNewTokens(
         @Body() token: RefreshTokenDto
     ): Promise<Tokens>{
         return this.userService.refreshTokens(token.refreshToken);
     }
 
-    @Post('activation')
-    @UsePipes(new ValidationPipe())
-    async activation(
-        @Body() userEmailDto: UserEmailDto
-    ): Promise<string>{
-        return "Activation endpoint";
-    }
-
     @Get('activate')
-    async activate(@Query() activateToken: string): Promise<string>{
+    async activate(
+        @Query() activateToken: string
+    ): Promise<string>{
         return "Activate endpoint";
     }
 
@@ -73,8 +68,7 @@ export class UserController {
     @Get('list')
     @UseGuards(AdminGuard)
     @UseInterceptors(ClassSerializerInterceptor)
-    async listOfUsers(
-    ): Promise<User[]>{
+    async listOfUsers(): Promise<User[]>{
         return this.userService.getUsersList();
     }
 
@@ -85,8 +79,6 @@ export class UserController {
     ): Promise<string>{
         return this.userService.deleteUser(id);
     }
-
-
 
     @Put('change')
     @UseGuards(UserGuard)
@@ -114,12 +106,5 @@ export class UserController {
     @UseGuards(AdminGuard)
     async logout(): Promise<string>{
         return "Logout endpoint";
-    }
-
-    @Post('change-password')
-    async changePassword(
-        @Body() userEmailDto: UserEmailDto
-    ): Promise<string>{
-        return "Change user password endpoint";
     }
 }

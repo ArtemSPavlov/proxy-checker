@@ -3,7 +3,7 @@ import { ApiBody, ApiTags } from '@nestjs/swagger';
 
 import { ProxyService } from './proxy.service';
 import { AddProxyDto } from '../common/dto/addProxy.dto';
-import { UserGuard } from 'src/auth/user.guard';
+import { UserGuard } from '../auth/user.guard';
 
 @Controller('proxy')
 export class ProxyController {
@@ -12,8 +12,6 @@ export class ProxyController {
     @UseGuards(UserGuard)
     @Get()
     async getProxy(){
-        // const proxyList = await this.proxyService.getActiveProxies();
-        // return this.proxyService.getActiveProxy(proxyList);
         return this.proxyService.getProxies(10);
     }
 
