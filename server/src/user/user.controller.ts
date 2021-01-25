@@ -42,7 +42,7 @@ export class UserController {
         return this.userService.validateUser(validateUserDto);
     }
 
-    @Post('refresh-tokens')
+    @Post('refresh')
     async getNewTokens(
         @Body() token: RefreshTokenDto
     ): Promise<Tokens>{
@@ -86,9 +86,8 @@ export class UserController {
         @Req() req: any,
         @Body() editUserDto: EditUserDto
     ): Promise<User>{
-        const user = {...req.user};
 
-        return this.userService.editAuthorizedUser(user, editUserDto);
+        return this.userService.editAuthorizedUser(req.user, editUserDto);
     }
 
     @Patch('password')
@@ -97,14 +96,7 @@ export class UserController {
         @Req() req: any,
         @Body() password: ChangePasswordDto
     ): Promise<string>{
-        const user = {...req.user};
 
-        return this.userService.changeAuthorizedUserPassword(user, password);
-    }
-
-    @Get('logout')
-    @UseGuards(AdminGuard)
-    async logout(): Promise<string>{
-        return "Logout endpoint";
+        return this.userService.changeAuthorizedUserPassword(req.user, password);
     }
 }

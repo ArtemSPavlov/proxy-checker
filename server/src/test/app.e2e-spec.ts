@@ -11,7 +11,9 @@ import { Proxy } from '../proxy/proxy.entity';
 
 describe('Start e2e tests', () => {
   let app: INestApplication;
-  let tokens: Tokens;
+  let adminTokens: Tokens;
+  let userTokens: Tokens;
+  const jwtRegExp = new RegExp('^[A-Za-z0-9-_=]+\.[A-Za-z0-9-_=]+\.?[A-Za-z0-9-_.+/=]*$');
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -32,12 +34,17 @@ describe('Start e2e tests', () => {
       await loadTestData(connection, Proxy, PROXIES);
     }
 
-    const response = await request(app.getHttpServer())
+    const adminValidationResponse = await request(app.getHttpServer())
       .post('/user/login')
       .send({ email: 'example-1@example.com', password: '111111' });
 
-    tokens = response.body;
-    console.log('Tokens: ', tokens);
+    adminTokens = adminValidationResponse.body;
+
+    const userValidationResponse = await request(app.getHttpServer())
+      .post('/user/login')
+      .send({ email: 'example-2@example.com', password: '111111' });
+
+    userTokens = userValidationResponse.body;
   });
 
   afterAll(async () => {
@@ -59,139 +66,351 @@ describe('Start e2e tests', () => {
 
     describe('/ (GET)', () => {
 
-      it('Without access token', () => {
-        return request(app.getHttpServer())
+      it('Without access token', async () => {
+        const result = await request(app.getHttpServer())
           .get('/user')
-          .expect(401)
+
+          expect(result.status).toEqual(401);
       });
 
-      it('With access token', () => {
-        return request(app.getHttpServer())
+      it('With access token', async () => {
+        const result = await request(app.getHttpServer())
           .get('/user')
-          .set('Authorization', `Bearer ${tokens.access_token}`)
-          .expect(200)
+          .set('Authorization', `Bearer ${adminTokens.access_token}`)
+
+          expect(result.status).toEqual(200);
+          expect(result.body.login).toEqual('test-user-1');
+          expect(result.body.email).toEqual('example-1@example.com');
       });
 
     });
 
     describe('/registration (POST)', () => {
 
-      it('Registration with used email', () => {
-        return request(app.getHttpServer())
+      it('Registration with used email', async () => {
+        const result = await request(app.getHttpServer())
           .post('/user/registration')
           .send({
             "login": "test-user",
             "email": "example-3@example.com",
             "password": "111111"
           })
-          .expect(400)
-          .expect({
-            "statusCode":400,
-            "message":"Email has been used"
-          })
+
+          expect(result.status).toEqual(400);
+          expect(result.body.message).toEqual('Email has been used');
       });
 
-      it('Registration with incorrect data', () => {
-        return request(app.getHttpServer())
+      it('Registration with invalid data', async () => {
+        const result = await request(app.getHttpServer())
           .post('/user/registration')
           .send({
             "password": "111111"
           })
-          .expect(400)
+
+          expect(result.status).toEqual(400);
       });
 
-      it('Registration with empty body', () => {
-        return request(app.getHttpServer())
+      it('Registration with empty body', async () => {
+        const result = await request(app.getHttpServer())
           .post('/user/registration')
-          .expect(400)
+
+          expect(result.status).toEqual(400);
       });
 
-      it('Registration with correct data', () => {
-        return request(app.getHttpServer())
+      it('Registration with valid data', async () => {
+        const result = await request(app.getHttpServer())
           .post('/user/registration')
           .send({
             "login": "Test_user",
             "email": `test_user_email_@example.com`,
             "password": "111111"
           })
-          .expect(201)
-          .expect(`User Test_user has been created!`)
+
+          expect(result.status).toEqual(201);
+          expect(result.text).toEqual('User Test_user has been created!');
       });
     });
 
     describe('/login (POST)', () => {
 
-      it('Login with incorrect email', () => {
-        return request(app.getHttpServer())
+      it('Login with invalid email', async () => {
+        const result = await request(app.getHttpServer())
           .post('/user/login')
           .send({
             "email": "example-34@example.com",
             "password": "111111"
           })
-          .expect(400)
-          .expect({
-            "statusCode":400,
-            "message":"Email or password incorrect!"
-          })
+
+          expect(result.status).toEqual(400);
+          expect(result.body.message).toEqual('Email or password incorrect!');
       });
 
-      it('Login with incorrect password', () => {
-        return request(app.getHttpServer())
+      it('Login with invalid password', async () => {
+        const result = await request(app.getHttpServer())
           .post('/user/login')
           .send({
             "email": "example-3@example.com",
             "password": "111112"
           })
-          .expect(400)
-          .expect({
-            "statusCode":400,
-            "message":"Email or password incorrect!"
-          })
+
+          expect(result.status).toEqual(400);
+          expect(result.body.message).toEqual('Email or password incorrect!');
       });
 
-      it('Login with correct data', () => {
-        return request(app.getHttpServer())
+      it('Login with valid data', async () => {
+        const result = await request(app.getHttpServer())
           .post('/user/login')
           .send({
             "email": "example-4@example.com",
             "password": "111111"
           })
-          .expect(201)
-          // .expect(Tokens)
-      });
-    });
 
-    describe('/refresh-tokens (POST)', () => {
-
-      it('Login with incorrect password', () => {
-        return request(app.getHttpServer())
-          .post('/user/login')
-          .send({
-            "email": "example111@example.com",
-            "password": "111112"
-          })
-          .expect(400)
-          .expect({
-            "statusCode":400,
-            "message":"Email or password incorrect!"
-          })
+          expect(result.status).toEqual(201);
+          expect(result.body.access_token).toMatch(jwtRegExp);
+          expect(result.body.refresh_token).toMatch(jwtRegExp);
       });
     });
 
     describe('/activate (GET)', () => {});
 
-    describe('/edit (PUT)', () => {});
+    describe('/edit (PUT)', () => {
 
-    describe('/list (GET)', () => {});
+      it('Without access token', async () => {
+        const result = await request(app.getHttpServer())
+          .put('/user/edit/3')
+          .send({
+            "login": "test-user-1-changed"
+          })
 
-    describe('/delete (DELETE)', () => {});
+          expect(result.status).toEqual(401);
+      });
 
-    describe('/change (PUT)', () => {});
+      it('With user permissions', async () => {
+        const result = await request(app.getHttpServer())
+          .put('/user/edit/3')
+          .set('Authorization', `Bearer ${userTokens.access_token}`)
+          .send({
+            "login": "test-user-1-changed"
+          })
 
-    describe('/password (PATCH)', () => {});
+          expect(result.status).toEqual(403);
+      });
 
-    describe('/logout (GET)', () => {});
+      it('With valid data', async () => {
+        const result = await request(app.getHttpServer())
+          .put('/user/edit/3')
+          .set('Authorization', `Bearer ${adminTokens.access_token}`)
+          .send({
+            "login": "test-user-1-changed"
+          })
 
+          expect(result.status).toEqual(200);
+          expect(result.text).toEqual('User updated!');
+      });
+
+      it('With invalid login length', async () => {
+        const result = await request(app.getHttpServer())
+          .put('/user/edit/3')
+          .set('Authorization', `Bearer ${adminTokens.access_token}`)
+          .send({
+            "login": "aa"
+          })
+
+          expect(result.status).toEqual(400);
+      });
+
+      it('With invalid data type', async () => {
+        const result = await request(app.getHttpServer())
+          .put('/user/edit/3')
+          .set('Authorization', `Bearer ${adminTokens.access_token}`)
+          .send({
+            "isActive": "string"
+          })
+
+          expect(result.status).toEqual(400);
+      });
+
+      it('With invalid data', async () => {
+        const result = await request(app.getHttpServer())
+          .put('/user/edit/3')
+          .set('Authorization', `Bearer ${adminTokens.access_token}`)
+          .send({
+            "name": "test-user-1-changed-incorrect"
+          })
+
+          expect(result.status).toEqual(400);
+      });
+    });
+
+    describe('/list (GET)', () => {
+
+      it('Without access token', async () => {
+        const result = await request(app.getHttpServer())
+          .get('/user/list')
+          .send({
+            "login": "test-user-1-changed"
+          })
+
+          expect(result.status).toEqual(401);
+      });
+
+      it('With user permissions', async () => {
+        const result = await request(app.getHttpServer())
+          .get('/user/list')
+          .set('Authorization', `Bearer ${userTokens.access_token}`)
+
+          expect(result.status).toEqual(403);
+      });
+
+      it('With admin permissions', async () => {
+        const result = await request(app.getHttpServer())
+          .get('/user/list')
+          .set('Authorization', `Bearer ${adminTokens.access_token}`)
+
+          expect(result.status).toEqual(200);
+          expect(result.body[0].login).toEqual('test-user-1');
+          expect(result.body[2].email).toEqual('example-4@example.com');
+
+          console.log('Body: ', result.body);
+      });
+    });
+
+    describe('/delete (DELETE)', () => {
+
+      it('Without access token', async () => {
+        const result = await request(app.getHttpServer())
+          .delete('/user/delete/5')
+
+          expect(result.status).toEqual(401);
+      });
+
+      it('With user permissions', async () => {
+        const result = await request(app.getHttpServer())
+          .delete('/user/delete/5')
+          .set('Authorization', `Bearer ${userTokens.access_token}`)
+
+          expect(result.status).toEqual(403);
+      });
+
+      it('With valid data', async () => {
+        const result = await request(app.getHttpServer())
+          .delete('/user/delete/5')
+          .set('Authorization', `Bearer ${adminTokens.access_token}`)
+
+          expect(result.status).toEqual(200);
+          expect(result.text).toEqual('User test-user-5 deleted!');
+      });
+    });
+
+    describe('/change (PUT)', () => {
+
+      it('Without access token', async () => {
+        const result = await request(app.getHttpServer())
+          .put('/user/change')
+
+          expect(result.status).toEqual(401);
+      });
+
+      it('With empty request body', async () => {
+        const result = await request(app.getHttpServer())
+          .put('/user/change')
+          .set('Authorization', `Bearer ${userTokens.access_token}`)
+
+          expect(result.status).toEqual(400);
+      });
+
+      it('With invalid data', async () => {
+        const result = await request(app.getHttpServer())
+          .put('/user/change')
+          .set('Authorization', `Bearer ${userTokens.access_token}`)
+          .send({
+            login: 'aa'
+          })
+
+          expect(result.status).toEqual(400);
+          // expect(result.body.message).toEqual('Invalid login');
+      });
+
+      it('With valid data', async () => {
+        const result = await request(app.getHttpServer())
+          .put('/user/change')
+          .set('Authorization', `Bearer ${userTokens.access_token}`)
+          .send({
+            login: 'NewLogin'
+          })
+
+          expect(result.status).toEqual(200);
+          expect(result.body.login).toEqual('NewLogin');
+      });
+    });
+
+    describe('/password (PATCH)', () => {
+
+      it('Without access token', async () => {
+        const result = await request(app.getHttpServer())
+          .patch('/user/password')
+
+          expect(result.status).toEqual(401);
+      });
+
+      it('With empty request body', async () => {
+        const result = await request(app.getHttpServer())
+          .patch('/user/password')
+          .set('Authorization', `Bearer ${userTokens.access_token}`)
+
+          expect(result.status).toEqual(400);
+      });
+
+      it('With invalid data', async () => {
+        const result = await request(app.getHttpServer())
+          .patch('/user/password')
+          .set('Authorization', `Bearer ${userTokens.access_token}`)
+          .send('aa')
+
+          expect(result.status).toEqual(400);
+          // expect(result.text).toEqual('Password change!');
+      });
+
+      it('With correct data', async () => {
+        const result = await request(app.getHttpServer())
+          .patch('/user/password')
+          .set('Authorization', `Bearer ${userTokens.access_token}`)
+          .send('NewPassword')
+
+          expect(result.status).toEqual(200);
+          expect(result.text).toEqual('Password change!');
+      });
+    });
+
+    describe('/refresh (POST)', () => {
+
+      // it('With empty request body', async () => {
+      //   const result = await request(app.getHttpServer())
+      //     .post('/user/refresh')
+
+      //     expect(result.status).toEqual(400);
+      //     expect(result.body.message).toEqual('Refresh token not valid');
+      // });
+
+      // it('With ivalid refresh token', async () => {
+      //   const result = await request(app.getHttpServer())
+      //     .post('/user/refresh')
+      //     .send(adminTokens.refresh_token + '!')
+
+      //     expect(result.status).toEqual(400);
+      //     expect(result.body.message).toEqual('Refresh token not valid');
+      // });
+
+      // it('With valid refresh token', async () => {
+      //   const result = await request(app.getHttpServer())
+      //     .post('/user/refresh')
+      //     .send(adminTokens.refresh_token)
+
+      //     expect(result.status).toEqual(200);
+      //     expect(result.body.access_token).toMatch(jwtRegExp);
+      //     expect(result.body.refresh_token).toMatch(jwtRegExp);
+      // });
+    });
   });
 
 });

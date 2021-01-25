@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
@@ -92,7 +92,7 @@ export class UserService {
                 }
             }
         } catch (error) {
-            throw new UnauthorizedException('Refresh token not valid');
+            throw new BadRequestException('Refresh token not valid');
         }
     }
 
@@ -111,13 +111,14 @@ export class UserService {
 
         const deletedUser = await this.usersRepository.remove(user);
 
+        // console.log('Deleted user: ', deletedUser);
         return `User ${deletedUser.login} deleted!`;
     }
 
     async editAuthorizedUser(user: User, dto: EditUserDto): Promise<User>{
         await this.usersRepository.update({uuid: user.uuid}, dto);
 
-        return await this.usersRepository.findOne({uuid: user.uuid});
+        return this.usersRepository.findOne({uuid: user.uuid});
     }
 
     async changeAuthorizedUserPassword(user: User, dto: ChangePasswordDto): Promise<string>{

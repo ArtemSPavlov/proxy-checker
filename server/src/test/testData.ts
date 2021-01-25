@@ -11,21 +11,21 @@ export const USERS = [
         email:'example-2@example.com',
         password:'$2b$10$iWafYQHgkcbF5ggX3GGT.upYVdttOEiXFy3PxWHMPTf.V.I1KC55m',
         isActive:true,
-        role:1
+        role:0
     },
     {
         login:'test-user-3',
         email:'example-3@example.com',
         password:'$2b$10$A7EGf54gIkUUbJiSPKIyiOsJ3PpVk1RlUr3MQHObhVTlLDNdYA.P2',
         isActive:true,
-        role:1
+        role:0
     },
     {
         login:'test-user-4',
         email:'example-4@example.com',
         password:'$2b$10$C4yN4BL0wU2mgitltLO62euQAhbwohH8ayuG/xr5S2ibofpsJl4lK',
         isActive:true,
-        role:1
+        role:0
     },
     {
         login:'test-user-5',
@@ -33,7 +33,7 @@ export const USERS = [
         email:'example-5@example.com',
         password:'$2b$10$fBHUKFocpTPnfzSGAnN1KuuKqlc0JUUmqt6oFREOT5YSZeVuDeP0K',
         isActive:false,
-        role:1
+        role:0
     },
 ]
 
