@@ -24,6 +24,7 @@ import { CreateUserDto } from './dto/createUser.dto';
 import { ValidateUserDto } from './dto/validateUser.dto';
 import { ValidationPipe } from '../common/validation.pipe';
 import { EditUserDto } from './dto/editUser.dto';
+import { EditUserLoginDto } from './dto/editUserLogin.dto';
 import { ChangePasswordDto } from './dto/changePassword.dto';
 import { Tokens } from './types/tokens.type';
 import { RefreshTokenDto } from './dto/refreshToken.dto';
@@ -49,54 +50,6 @@ export class UserController {
         return this.userService.createUser(createUserDto);
     }
 
-    @Post('login')
-    @UsePipes(new ValidationPipe())
-    async signIn(
-        @Body() validateUserDto: ValidateUserDto
-    ): Promise<Tokens>{
-        return this.userService.validateUser(validateUserDto);
-    }
-
-    @Post('refresh')
-    async getNewTokens(
-        @Body() token: RefreshTokenDto
-    ): Promise<Tokens>{
-        return this.userService.refreshTokens(token.refreshToken);
-    }
-
-    @Get('activate')
-    async activate(
-        @Query() activateToken: string
-    ): Promise<string>{
-        return "Activate endpoint";
-    }
-
-    @Put('edit/:id')
-    @UseGuards(AdminGuard)
-    @UsePipes(new ValidationPipe())
-    async edit(
-        @Param('id', ParseIntPipe) id: number,
-        @Body() editUserDto: EditUserDto
-    ): Promise<string>{
-        return this.userService.editUser(id, editUserDto);
-    }
-
-    @Get('list')
-    @UseGuards(AdminGuard)
-    @UseInterceptors(ClassSerializerInterceptor)
-    async listOfUsers(): Promise<User[]>{
-        return this.userService.getUsersList();
-    }
-
-    @Delete('delete/:id')
-    @UseGuards(AdminGuard)
-    async delete(
-        @Param('id', ParseIntPipe) id: number,
-    ): Promise<string>{
-
-        return this.userService.deleteUser(id);
-    }
-
     @Put()
     @UseGuards(UserGuard)
     @UsePipes(new ValidationPipe())
@@ -117,5 +70,46 @@ export class UserController {
     ): Promise<string>{
 
         return this.userService.changeAuthorizedUserPassword(req.user, password);
+    }
+
+    @Post('login')
+    @UsePipes(new ValidationPipe())
+    async signIn(
+        @Body() validateUserDto: ValidateUserDto
+    ): Promise<Tokens>{
+        return this.userService.validateUser(validateUserDto);
+    }
+
+    @Post('refresh')
+    async getNewTokens(
+        @Body() token: RefreshTokenDto
+    ): Promise<Tokens>{
+        return this.userService.refreshTokens(token.refreshToken);
+    }
+
+    @Put('edit/:id')
+    @UseGuards(AdminGuard)
+    @UsePipes(new ValidationPipe())
+    async edit(
+        @Param('id', ParseIntPipe) id: number,
+        @Body() editUserLoginDto: EditUserLoginDto
+    ): Promise<string>{
+        return this.userService.editUser(id, editUserLoginDto);
+    }
+
+    @Get('list')
+    @UseGuards(AdminGuard)
+    @UseInterceptors(ClassSerializerInterceptor)
+    async listOfUsers(): Promise<User[]>{
+        return this.userService.getUsersList();
+    }
+
+    @Delete('delete/:id')
+    @UseGuards(AdminGuard)
+    async delete(
+        @Param('id', ParseIntPipe) id: number,
+    ): Promise<string>{
+
+        return this.userService.deleteUser(id);
     }
 }

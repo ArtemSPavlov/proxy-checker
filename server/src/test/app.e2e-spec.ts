@@ -254,8 +254,6 @@ describe('Start e2e tests', () => {
       });
     });
 
-    describe('/activate (GET)', () => {});
-
     describe('/edit (PUT)', () => {
 
       it('Without access token', async () => {
@@ -426,32 +424,35 @@ describe('Start e2e tests', () => {
 
     describe('/refresh (POST)', () => {
 
-      // it('With empty request body', async () => {
-      //   const result = await request(app.getHttpServer())
-      //     .post('/user/refresh')
+      it('With empty request body', async () => {
+        const result = await request(app.getHttpServer())
+          .post('/user/refresh')
 
-      //     expect(result.status).toEqual(400);
-      //     expect(result.body.message).toEqual('Refresh token not valid');
-      // });
+          expect(result.status).toEqual(400);
+      });
 
-      // it('With ivalid refresh token', async () => {
-      //   const result = await request(app.getHttpServer())
-      //     .post('/user/refresh')
-      //     .send(adminTokens.refresh_token + '!')
+      it('With ivalid refresh token', async () => {
+        const result = await request(app.getHttpServer())
+          .post('/user/refresh')
+          .send({
+            refreshToken: adminTokens.refresh_token + '!'
+          })
 
-      //     expect(result.status).toEqual(400);
-      //     expect(result.body.message).toEqual('Refresh token not valid');
-      // });
+          expect(result.status).toEqual(400);
+          expect(result.body.message).toEqual('Refresh token not valid');
+      });
 
-      // it('With valid refresh token', async () => {
-      //   const result = await request(app.getHttpServer())
-      //     .post('/user/refresh')
-      //     .send(adminTokens.refresh_token)
+      it('With valid refresh token', async () => {
+        const result = await request(app.getHttpServer())
+          .post('/user/refresh')
+          .send({
+            refreshToken: adminTokens.refresh_token
+          })
 
-      //     expect(result.status).toEqual(200);
-      //     expect(result.body.access_token).toMatch(jwtRegExp);
-      //     expect(result.body.refresh_token).toMatch(jwtRegExp);
-      // });
+          expect(result.status).toEqual(201);
+          expect(result.body.access_token).toMatch(jwtRegExp);
+          expect(result.body.refresh_token).toMatch(jwtRegExp);
+      });
     });
   });
 
