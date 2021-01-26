@@ -116,6 +116,7 @@ export class UserService {
     }
 
     async editAuthorizedUser(user: User, dto: EditUserDto): Promise<User>{
+
         await this.usersRepository.update({uuid: user.uuid}, dto);
 
         return this.usersRepository.findOne({uuid: user.uuid});
