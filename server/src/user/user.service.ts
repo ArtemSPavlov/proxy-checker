@@ -1,4 +1,4 @@
-import { BadRequestException, HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { BadRequestException, HttpException, HttpStatus, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
@@ -83,7 +83,7 @@ export class UserService {
 
             if(!!tokenStatus && 'object' === typeof(tokenPayload) && tokenPayload.hasOwnProperty('uuid')){
                 const user = await this.usersRepository.findOne({uuid: tokenPayload['uuid']});
-                const refreshToken = await (await this.authService.getRefreshToken(user)).token;
+                const refreshToken = (await this.authService.getRefreshToken(user)).token;
                 const accessToken = await this.authService.getAccessToken(user);
 
                 return {
@@ -97,8 +97,19 @@ export class UserService {
     }
 
     async editUser(id: number, dto: EditUserDto): Promise<string>{
-        await this.usersRepository.update({id: id}, dto);
-        return 'User updated!';
+        const user = await this.usersRepository.findOne(id);
+
+        if(!user){
+            throw new BadRequestException('User not found!');
+        } else {
+            const updateResult = await this.usersRepository.update(id, dto);
+
+            if(!updateResult.affected){
+                throw new InternalServerErrorException();
+            } else {
+                return `User ${user.login} updated!`;
+            }
+        }
     }
 
     async getUsersList(): Promise<User[]>{
@@ -106,13 +117,14 @@ export class UserService {
     }
 
     async deleteUser(id: number): Promise<string>{
-        const user = new User();
-        user.id = id;
+        const user = await this.usersRepository.findOne(id);
 
-        const deletedUser = await this.usersRepository.remove(user);
-
-        // console.log('Deleted user: ', deletedUser);
-        return `User ${deletedUser.login} deleted!`;
+        if(!user){
+            throw new BadRequestException('User not found!');
+        } else {
+            const deletedUser = await this.usersRepository.remove(user);
+            return `User ${deletedUser.login} deleted!`;
+        }
     }
 
     async editAuthorizedUser(user: User, dto: EditUserDto): Promise<User>{

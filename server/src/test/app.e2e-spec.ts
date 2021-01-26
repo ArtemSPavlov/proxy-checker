@@ -279,18 +279,6 @@ describe('Start e2e tests', () => {
           expect(result.status).toEqual(403);
       });
 
-      it('With valid data', async () => {
-        const result = await request(app.getHttpServer())
-          .put('/user/edit/3')
-          .set('Authorization', `Bearer ${adminTokens.access_token}`)
-          .send({
-            "login": "test-user-1-changed"
-          })
-
-          expect(result.status).toEqual(200);
-          expect(result.text).toEqual('User updated!');
-      });
-
       it('With invalid login length', async () => {
         const result = await request(app.getHttpServer())
           .put('/user/edit/3')
@@ -313,6 +301,29 @@ describe('Start e2e tests', () => {
           expect(result.status).toEqual(400);
       });
 
+      it('With invalid user id type', async () => {
+        const result = await request(app.getHttpServer())
+          .put('/user/edit/abc')
+          .set('Authorization', `Bearer ${adminTokens.access_token}`)
+          .send({
+            "login": "test-user-1-changed-incorrect"
+          })
+
+          expect(result.status).toEqual(400);
+      });
+
+      it('With invalid user id', async () => {
+        const result = await request(app.getHttpServer())
+          .put('/user/edit/33')
+          .set('Authorization', `Bearer ${adminTokens.access_token}`)
+          .send({
+            "login": "test-user-1-changed-incorrect"
+          })
+
+          expect(result.status).toEqual(400);
+          expect(result.body.message).toEqual('User not found!');
+      });
+
       it('With invalid data', async () => {
         const result = await request(app.getHttpServer())
           .put('/user/edit/3')
@@ -322,6 +333,18 @@ describe('Start e2e tests', () => {
           })
 
           expect(result.status).toEqual(400);
+      });
+
+      it('With valid data', async () => {
+        const result = await request(app.getHttpServer())
+          .put('/user/edit/3')
+          .set('Authorization', `Bearer ${adminTokens.access_token}`)
+          .send({
+            "login": "test-user-1-changed"
+          })
+
+          expect(result.status).toEqual(200);
+          expect(result.text).toEqual('User test-user-3 updated!');
       });
     });
 
@@ -373,14 +396,31 @@ describe('Start e2e tests', () => {
           expect(result.status).toEqual(403);
       });
 
-      // it('With valid data', async () => {
-      //   const result = await request(app.getHttpServer())
-      //     .delete('/user/delete/5')
-      //     .set('Authorization', `Bearer ${adminTokens.access_token}`)
+      it('With invalid user id type', async () => {
+        const result = await request(app.getHttpServer())
+          .delete('/user/delete/abc')
+          .set('Authorization', `Bearer ${adminTokens.access_token}`)
 
-      //     expect(result.status).toEqual(200);
-      //     expect(result.text).toEqual('User test-user-5 deleted!');
-      // });
+          expect(result.status).toEqual(400);
+      });
+
+      it('With invalid user id', async () => {
+        const result = await request(app.getHttpServer())
+          .delete('/user/delete/13')
+          .set('Authorization', `Bearer ${adminTokens.access_token}`)
+
+          expect(result.status).toEqual(400);
+          expect(result.body.message).toEqual('User not found!');
+      });
+
+      it('With valid id', async () => {
+        const result = await request(app.getHttpServer())
+          .delete('/user/delete/5')
+          .set('Authorization', `Bearer ${adminTokens.access_token}`)
+
+          expect(result.status).toEqual(200);
+          expect(result.text).toEqual('User test-user-5 deleted!');
+      });
     });
 
 

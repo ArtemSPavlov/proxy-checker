@@ -1,4 +1,20 @@
-import { Body, Controller, Get, Post, UsePipes, UseGuards, Req, UseInterceptors, ClassSerializerInterceptor, Patch, Put, Delete, Query, Param, ParseIntPipe, HttpException, HttpStatus } from '@nestjs/common';
+import {
+    Body,
+    Controller,
+    Get,
+    Post,
+    UsePipes,
+    UseGuards,
+    Req,
+    UseInterceptors,
+    ClassSerializerInterceptor,
+    Patch,
+    Put,
+    Delete,
+    Query,
+    Param,
+    ParseIntPipe
+} from '@nestjs/common';
 
 import { UserGuard } from '../auth/user.guard';
 import { AdminGuard } from '../auth/admin.guard';
@@ -77,6 +93,7 @@ export class UserController {
     async delete(
         @Param('id', ParseIntPipe) id: number,
     ): Promise<string>{
+
         return this.userService.deleteUser(id);
     }
 
