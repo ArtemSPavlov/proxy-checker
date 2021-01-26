@@ -345,17 +345,15 @@ describe('Start e2e tests', () => {
           expect(result.status).toEqual(403);
       });
 
-      // it('With admin permissions', async () => {
-      //   const result = await request(app.getHttpServer())
-      //     .get('/user/list')
-      //     .set('Authorization', `Bearer ${adminTokens.access_token}`)
+      it('With admin permissions', async () => {
+        const result = await request(app.getHttpServer())
+          .get('/user/list')
+          .set('Authorization', `Bearer ${adminTokens.access_token}`)
 
-      //     expect(result.status).toEqual(200);
-      //     expect(result.body[0].login).toEqual('test-user-1');
-      //     expect(result.body[2].email).toEqual('example-4@example.com');
-
-      //     console.log('Body: ', result.body);
-      // });
+          expect(result.status).toEqual(200);
+          expect(result.body[0].login).toEqual('test-user-1');
+          expect(result.body[2].email).toEqual('example-5@example.com');
+      });
     });
 
     describe('/delete (DELETE)', () => {
