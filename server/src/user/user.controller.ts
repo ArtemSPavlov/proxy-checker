@@ -57,6 +57,7 @@ export class UserController {
 
     @Put('edit/:id')
     @UseGuards(AdminGuard)
+    @UsePipes(new ValidationPipe())
     async edit(
         @Param('id', ParseIntPipe) id: number,
         @Body() editUserDto: EditUserDto

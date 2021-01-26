@@ -138,33 +138,34 @@ describe('Start e2e tests', () => {
           expect(result.status).toEqual(401);
       });
 
-      // it('With empty request body', async () => {
-      //   const result = await request(app.getHttpServer())
-      //     .patch('/user')
-      //     .set('Authorization', `Bearer ${userTokens.access_token}`)
+      it('With empty request body', async () => {
+        const result = await request(app.getHttpServer())
+          .patch('/user')
+          .set('Authorization', `Bearer ${userTokens.access_token}`)
 
-      //     expect(result.status).toEqual(400);
-      // });
+          expect(result.status).toEqual(400);
+      });
 
-      // it('With invalid data', async () => {
-      //   const result = await request(app.getHttpServer())
-      //     .patch('/user')
-      //     .set('Authorization', `Bearer ${userTokens.access_token}`)
-      //     .send('aa')
+      it('With invalid data', async () => {
+        const result = await request(app.getHttpServer())
+          .patch('/user')
+          .set('Authorization', `Bearer ${userTokens.access_token}`)
+          .send('aa')
 
-      //     expect(result.status).toEqual(400);
-      //     // expect(result.text).toEqual('Password change!');
-      // });
+          expect(result.status).toEqual(400);
+      });
 
-      // it('With correct data', async () => {
-      //   const result = await request(app.getHttpServer())
-      //     .patch('/user/password')
-      //     .set('Authorization', `Bearer ${userTokens.access_token}`)
-      //     .send('NewPassword')
+      it('With correct data', async () => {
+        const result = await request(app.getHttpServer())
+          .patch('/user')
+          .set('Authorization', `Bearer ${userTokens.access_token}`)
+          .send({
+            password: 'NewPassword'
+          })
 
-      //     expect(result.status).toEqual(200);
-      //     expect(result.text).toEqual('Password change!');
-      // });
+          expect(result.status).toEqual(200);
+          expect(result.text).toEqual('Password change!');
+      });
     });
 
     describe('/ (POST)', () => {
@@ -290,38 +291,38 @@ describe('Start e2e tests', () => {
           expect(result.text).toEqual('User updated!');
       });
 
-      // it('With invalid login length', async () => {
-      //   const result = await request(app.getHttpServer())
-      //     .put('/user/edit/3')
-      //     .set('Authorization', `Bearer ${adminTokens.access_token}`)
-      //     .send({
-      //       "login": "aa"
-      //     })
+      it('With invalid login length', async () => {
+        const result = await request(app.getHttpServer())
+          .put('/user/edit/3')
+          .set('Authorization', `Bearer ${adminTokens.access_token}`)
+          .send({
+            "login": "aa"
+          })
 
-      //     expect(result.status).toEqual(400);
-      // });
+          expect(result.status).toEqual(400);
+      });
 
-      // it('With invalid data type', async () => {
-      //   const result = await request(app.getHttpServer())
-      //     .put('/user/edit/3')
-      //     .set('Authorization', `Bearer ${adminTokens.access_token}`)
-      //     .send({
-      //       "isActive": "string"
-      //     })
+      it('With invalid data type', async () => {
+        const result = await request(app.getHttpServer())
+          .put('/user/edit/3')
+          .set('Authorization', `Bearer ${adminTokens.access_token}`)
+          .send({
+            "isActive": "string"
+          })
 
-      //     expect(result.status).toEqual(400);
-      // });
+          expect(result.status).toEqual(400);
+      });
 
-      // it('With invalid data', async () => {
-      //   const result = await request(app.getHttpServer())
-      //     .put('/user/edit/3')
-      //     .set('Authorization', `Bearer ${adminTokens.access_token}`)
-      //     .send({
-      //       "name": "test-user-1-changed-incorrect"
-      //     })
+      it('With invalid data', async () => {
+        const result = await request(app.getHttpServer())
+          .put('/user/edit/3')
+          .set('Authorization', `Bearer ${adminTokens.access_token}`)
+          .send({
+            "name": "test-user-1-changed-incorrect"
+          })
 
-      //     expect(result.status).toEqual(400);
-      // });
+          expect(result.status).toEqual(400);
+      });
     });
 
     describe('/list (GET)', () => {
