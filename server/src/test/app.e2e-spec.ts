@@ -85,11 +85,91 @@ describe('Start e2e tests', () => {
 
     });
 
-    describe('/registration (POST)', () => {
+    describe('/ (PUT)', () => {
+
+      it('Without access token', async () => {
+        const result = await request(app.getHttpServer())
+          .put('/user')
+
+          expect(result.status).toEqual(401);
+      });
+
+      it('With empty request body', async () => {
+        const result = await request(app.getHttpServer())
+          .put('/user')
+          .set('Authorization', `Bearer ${userTokens.access_token}`)
+
+          expect(result.status).toEqual(400);
+      });
+
+      it('With invalid data', async () => {
+        const result = await request(app.getHttpServer())
+          .put('/user')
+          .set('Authorization', `Bearer ${userTokens.access_token}`)
+          .send({
+            login: 'aa'
+          })
+
+          expect(result.status).toEqual(400);
+          // expect(result.body.message).toEqual('Invalid login');
+      });
+
+      it('With valid data', async () => {
+        const result = await request(app.getHttpServer())
+          .put('/user')
+          .set('Authorization', `Bearer ${userTokens.access_token}`)
+          .send({
+            login: 'NewLogin'
+          })
+
+          expect(result.status).toEqual(200);
+          expect(result.body.login).toEqual('NewLogin');
+      });
+    });
+
+    describe('/ (PATCH)', () => {
+
+      it('Without access token', async () => {
+        const result = await request(app.getHttpServer())
+          .patch('/user')
+
+          expect(result.status).toEqual(401);
+      });
+
+      it('With empty request body', async () => {
+        const result = await request(app.getHttpServer())
+          .patch('/user')
+          .set('Authorization', `Bearer ${userTokens.access_token}`)
+
+          expect(result.status).toEqual(400);
+      });
+
+      it('With invalid data', async () => {
+        const result = await request(app.getHttpServer())
+          .patch('/user')
+          .set('Authorization', `Bearer ${userTokens.access_token}`)
+          .send('aa')
+
+          expect(result.status).toEqual(400);
+          // expect(result.text).toEqual('Password change!');
+      });
+
+      it('With correct data', async () => {
+        const result = await request(app.getHttpServer())
+          .patch('/user/password')
+          .set('Authorization', `Bearer ${userTokens.access_token}`)
+          .send('NewPassword')
+
+          expect(result.status).toEqual(200);
+          expect(result.text).toEqual('Password change!');
+      });
+    });
+
+    describe('/ (POST)', () => {
 
       it('Registration with used email', async () => {
         const result = await request(app.getHttpServer())
-          .post('/user/registration')
+          .post('/user')
           .send({
             "login": "test-user",
             "email": "example-3@example.com",
@@ -102,7 +182,7 @@ describe('Start e2e tests', () => {
 
       it('Registration with invalid data', async () => {
         const result = await request(app.getHttpServer())
-          .post('/user/registration')
+          .post('/user')
           .send({
             "password": "111111"
           })
@@ -112,14 +192,14 @@ describe('Start e2e tests', () => {
 
       it('Registration with empty body', async () => {
         const result = await request(app.getHttpServer())
-          .post('/user/registration')
+          .post('/user')
 
           expect(result.status).toEqual(400);
       });
 
       it('Registration with valid data', async () => {
         const result = await request(app.getHttpServer())
-          .post('/user/registration')
+          .post('/user')
           .send({
             "login": "Test_user",
             "email": `test_user_email_@example.com`,
@@ -302,85 +382,6 @@ describe('Start e2e tests', () => {
       });
     });
 
-    describe('/change (PUT)', () => {
-
-      it('Without access token', async () => {
-        const result = await request(app.getHttpServer())
-          .put('/user/change')
-
-          expect(result.status).toEqual(401);
-      });
-
-      it('With empty request body', async () => {
-        const result = await request(app.getHttpServer())
-          .put('/user/change')
-          .set('Authorization', `Bearer ${userTokens.access_token}`)
-
-          expect(result.status).toEqual(400);
-      });
-
-      it('With invalid data', async () => {
-        const result = await request(app.getHttpServer())
-          .put('/user/change')
-          .set('Authorization', `Bearer ${userTokens.access_token}`)
-          .send({
-            login: 'aa'
-          })
-
-          expect(result.status).toEqual(400);
-          // expect(result.body.message).toEqual('Invalid login');
-      });
-
-      it('With valid data', async () => {
-        const result = await request(app.getHttpServer())
-          .put('/user/change')
-          .set('Authorization', `Bearer ${userTokens.access_token}`)
-          .send({
-            login: 'NewLogin'
-          })
-
-          expect(result.status).toEqual(200);
-          expect(result.body.login).toEqual('NewLogin');
-      });
-    });
-
-    describe('/password (PATCH)', () => {
-
-      it('Without access token', async () => {
-        const result = await request(app.getHttpServer())
-          .patch('/user/password')
-
-          expect(result.status).toEqual(401);
-      });
-
-      it('With empty request body', async () => {
-        const result = await request(app.getHttpServer())
-          .patch('/user/password')
-          .set('Authorization', `Bearer ${userTokens.access_token}`)
-
-          expect(result.status).toEqual(400);
-      });
-
-      it('With invalid data', async () => {
-        const result = await request(app.getHttpServer())
-          .patch('/user/password')
-          .set('Authorization', `Bearer ${userTokens.access_token}`)
-          .send('aa')
-
-          expect(result.status).toEqual(400);
-          // expect(result.text).toEqual('Password change!');
-      });
-
-      it('With correct data', async () => {
-        const result = await request(app.getHttpServer())
-          .patch('/user/password')
-          .set('Authorization', `Bearer ${userTokens.access_token}`)
-          .send('NewPassword')
-
-          expect(result.status).toEqual(200);
-          expect(result.text).toEqual('Password change!');
-      });
-    });
 
     describe('/refresh (POST)', () => {
 

@@ -26,7 +26,7 @@ export class UserController {
     }
 
     @UseInterceptors(ClassSerializerInterceptor)
-    @Post('registration')
+    @Post()
     @UsePipes(new ValidationPipe())
     async createUser(
         @Body() createUserDto: CreateUserDto
@@ -80,7 +80,7 @@ export class UserController {
         return this.userService.deleteUser(id);
     }
 
-    @Put('change')
+    @Put()
     @UseGuards(UserGuard)
     async changeUser(
         @Req() req: any,
@@ -90,7 +90,7 @@ export class UserController {
         return this.userService.editAuthorizedUser(req.user, editUserDto);
     }
 
-    @Patch('password')
+    @Patch()
     @UseGuards(UserGuard)
     async password(
         @Req() req: any,
