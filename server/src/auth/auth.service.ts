@@ -29,7 +29,7 @@ export class AuthService {
         return jwt.sign(payload, process.env.JWT_SECRET, expiresIn);
     }
 
-        /**
+    /**
      * Gets token
      * @param user
      * @returns token

@@ -11,7 +11,6 @@ import {
     Patch,
     Put,
     Delete,
-    Query,
     Param,
     ParseIntPipe
 } from '@nestjs/common';
@@ -25,7 +24,6 @@ import { ValidateUserDto } from './dto/validateUser.dto';
 import { ValidationPipe } from '../common/validation.pipe';
 import { EditUserDto } from './dto/editUser.dto';
 import { EditUserLoginDto } from './dto/editUserLogin.dto';
-import { ChangePasswordDto } from './dto/changePassword.dto';
 import { Tokens } from './types/tokens.type';
 import { RefreshTokenDto } from './dto/refreshToken.dto';
 
@@ -66,7 +64,7 @@ export class UserController {
     @UsePipes(new ValidationPipe())
     async password(
         @Req() req: any,
-        @Body() password: ChangePasswordDto
+        @Body() password: ValidateUserDto
     ): Promise<string>{
 
         return this.userService.changeAuthorizedUserPassword(req.user, password);

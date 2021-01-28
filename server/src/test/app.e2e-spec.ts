@@ -146,11 +146,26 @@ describe('Start e2e tests', () => {
           expect(result.status).toEqual(400);
       });
 
-      it('With invalid data', async () => {
+      it('With invalid password', async () => {
         const result = await request(app.getHttpServer())
           .patch('/user')
           .set('Authorization', `Bearer ${userTokens.access_token}`)
-          .send('aa')
+          .send({
+            email: 'example-2@example.com',
+            password: 'aa'
+          })
+
+          expect(result.status).toEqual(400);
+      });
+
+      it('With invalid email', async () => {
+        const result = await request(app.getHttpServer())
+          .patch('/user')
+          .set('Authorization', `Bearer ${userTokens.access_token}`)
+          .send({
+            email: 'example-2334@example.com',
+            password: '111111'
+          })
 
           expect(result.status).toEqual(400);
       });
@@ -160,6 +175,7 @@ describe('Start e2e tests', () => {
           .patch('/user')
           .set('Authorization', `Bearer ${userTokens.access_token}`)
           .send({
+            email: 'example-2@example.com',
             password: 'NewPassword'
           })
 
