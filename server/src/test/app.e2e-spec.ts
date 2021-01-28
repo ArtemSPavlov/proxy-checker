@@ -180,7 +180,7 @@ describe('Start e2e tests', () => {
           })
 
           expect(result.status).toEqual(200);
-          expect(result.text).toEqual('Password change!');
+          expect(result.text).toEqual('Password changed!');
       });
     });
 
@@ -471,5 +471,40 @@ describe('Start e2e tests', () => {
       });
     });
   });
+
+  describe('[e2e] ProxyController /proxy', () => {
+
+    describe('/ (GET)', () => {
+
+      it('Without access token', async () => {
+        const result = await request(app.getHttpServer())
+          .get('/proxy')
+
+          expect(result.status).toEqual(401);
+      });
+
+      it('Without valid token', async () => {
+        const result = await request(app.getHttpServer())
+          .get('/proxy')
+          .set('Authorization', `Bearer ${userTokens.access_token}`)
+
+          expect(result.status).toEqual(200);
+          expect(result.body[3].host).toEqual('194.190.136.35');
+          expect(result.body[5].host).toEqual('81.163.97.238');
+      });
+    })
+
+    describe('/ (POST)', () => {
+
+    })
+
+    describe('/ (DELETE)', () => {
+
+    })
+
+    describe('/update (GET)', () => {
+
+    })
+  })
 
 });

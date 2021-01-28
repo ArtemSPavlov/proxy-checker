@@ -16,14 +16,11 @@ export class ProxyController {
     }
 
     @Post()
-    @ApiTags('proxy')
-    @ApiBody({ type: [AddProxyDto] })
     async saveProxy(@Body() body: AddProxyDto[]): Promise<string> {
         return this.proxyService.addProxy(body);
     }
 
     @Delete()
-    @ApiTags('proxy')
     async deleteProxy(): Promise<string> {
         return "Proxy deleted";
     }
