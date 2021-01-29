@@ -496,6 +496,83 @@ describe('Start e2e tests', () => {
 
     describe('/ (POST)', () => {
 
+      it('Without access token', async () => {
+        const result = await request(app.getHttpServer())
+          .post('/proxy')
+
+          expect(result.status).toEqual(401);
+      });
+
+      it('With low permissions', async () => {
+        const result = await request(app.getHttpServer())
+          .post('/proxy')
+          .set('Authorization', `Bearer ${userTokens.access_token}`)
+
+          expect(result.status).toEqual(403);
+      });
+
+      it('With invalid data', async () => {
+        const result = await request(app.getHttpServer())
+          .post('/proxy')
+          .set('Authorization', `Bearer ${adminTokens.access_token}`)
+          .send({
+            proxies: [{
+            type: 0,
+            host: '111.111.11.11',
+            port: 'abcd',
+            country: '',
+          },
+          {
+            type: 1,
+            host: '11.11.11.11',
+            port: 1111,
+            country: '',
+          }]})
+
+          expect(result.status).toEqual(400);
+      });
+
+      it('With invalid data', async () => {
+        const result = await request(app.getHttpServer())
+          .post('/proxy')
+          .set('Authorization', `Bearer ${adminTokens.access_token}`)
+          .send({
+            proxies: [{
+            type: 0,
+            host: '111.111.11.11',
+            port: 'abcd',
+            country: '',
+          },
+          {
+            type: 1,
+            port: 1111,
+            country: '',
+          }]})
+
+          expect(result.status).toEqual(400);
+      });
+
+      it('With valid data', async () => {
+        const result = await request(app.getHttpServer())
+          .post('/proxy')
+          .set('Authorization', `Bearer ${adminTokens.access_token}`)
+          .send({
+            proxies: [{
+            type: 0,
+            host: '111.111.11.11',
+            port: 1111,
+            country: '',
+          },
+          {
+            type: 1,
+            host: '11.11.11.11',
+            port: 1111,
+            country: '',
+          }]})
+
+          expect(result.status).toEqual(201);
+          expect(result.text).toEqual('Saved in database');
+      });
     })
 
     describe('/ (DELETE)', () => {

@@ -4,9 +4,9 @@ import { Repository } from 'typeorm';
 import * as promiseAny from 'promise.any'
 import { from } from 'rxjs';
 
-import { AddProxyDto } from '../common/dto/addProxy.dto';
 import { Proxy } from './proxy.entity';
 import { ProxyType } from './types/proxy.type';
+import { AddProxiesOuterDto } from '../common/dto/addProxiesOuter.dto';
 
 @Injectable()
 export class ProxyService {
@@ -18,16 +18,12 @@ export class ProxyService {
 
     /**
      * Save proxies in database
-     * @param dto AddProxyDto[]
+     * @param dto AddProxiesOuterDto
      * @returns Promise<void | string>
      */
-    async addProxy(dto: AddProxyDto[]): Promise<string>{
-        try {
-            await this.proxyRepository.save(dto);
-            return "Saved in database";
-        } catch (error) {
-            return error;
-        }
+    async addProxy(dto: AddProxiesOuterDto): Promise<string>{
+          await this.proxyRepository.save(dto.proxies);
+          return "Saved in database";
     }
 
   /**
