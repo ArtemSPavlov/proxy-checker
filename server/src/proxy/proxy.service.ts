@@ -132,7 +132,7 @@ export class ProxyService {
         error => {
           this.proxyRepository.update(proxy, {isActive: false})
         }),
-        ()=>console.log("Update complete!!");
+        () => console.log("Update complete!!");
     } catch (e) {
       console.log(e)
     }
@@ -157,8 +157,8 @@ export class ProxyService {
    * @param DeleteProxiesOuterDto
    * @returns Promise<string>
    */
-  async deleteProxies(dto: DeleteProxiesOuterDto): Promise<any>{
-    const deleteResult = await this.proxyRepository.remove(dto.proxies as Proxy[]);
+  async deleteProxies(dto: DeleteProxiesOuterDto): Promise<string>{
+    await this.proxyRepository.remove(dto.proxies as Proxy[]);
     return 'Proxies has been deleted';
   }
 }

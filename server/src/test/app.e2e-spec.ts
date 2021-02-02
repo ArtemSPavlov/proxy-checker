@@ -657,7 +657,28 @@ describe('Start e2e tests', () => {
     })
 
     describe('/update (GET)', () => {
+      it('Without access token', async () => {
+        const result = await request(app.getHttpServer())
+          .get('/proxy/update')
 
+          expect(result.status).toEqual(401);
+      });
+
+      it('With low permissions', async () => {
+        const result = await request(app.getHttpServer())
+          .get('/proxy/update')
+          .set('Authorization', `Bearer ${userTokens.access_token}`)
+
+          expect(result.status).toEqual(403);
+      });
+
+      // it('With valid data', async () => {
+      //   const result = await request(app.getHttpServer())
+      //     .get('/proxy/update')
+      //     .set('Authorization', `Bearer ${adminTokens.access_token}`)
+
+      //     expect(result.status).toEqual(200);
+      // });
     })
   })
 

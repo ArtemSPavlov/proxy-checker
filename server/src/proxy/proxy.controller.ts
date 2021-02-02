@@ -26,13 +26,13 @@ export class ProxyController {
     @UseGuards(AdminGuard)
     async deleteProxy(
         @Body() body: DeleteProxiesOuterDto
-    ): Promise<any> {
+    ): Promise<string> {
         return this.proxyService.deleteProxies(body);
     }
 
     @Get("update")
     @UseGuards(AdminGuard)
-    async updatedProxies(){
+    async updatedProxies(): Promise<void>{
         const proxyList = await this.proxyService.getProxies();
         return this.proxyService.updateProxies(proxyList);
     }
