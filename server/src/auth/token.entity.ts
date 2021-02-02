@@ -10,7 +10,7 @@ export class Token{
     @JoinColumn()
     user: User;
 
-    @Column({type: "varchar", length: 255 })
+    @Column({type: "varchar" })
     token: string;
 
     @CreateDateColumn()
