@@ -50,10 +50,10 @@ describe('Start e2e tests', () => {
   afterAll(async () => {
 
     if (process.env.NODE_ENV === 'test') {
-      const connection = app.get(Connection);
-      await connection.synchronize(true);
-      await deleteTestData(connection, User);
-      await deleteTestData(connection, Proxy);
+      // const connection = app.get(Connection);
+      // await connection.synchronize(true);
+      // await deleteTestData(connection, User);
+      // await deleteTestData(connection, Proxy);
     }
 
     await Promise.all([
@@ -576,7 +576,82 @@ describe('Start e2e tests', () => {
     })
 
     describe('/ (DELETE)', () => {
+      it('Without access token', async () => {
+        const result = await request(app.getHttpServer())
+          .delete('/proxy')
+          .send({
+            proxies: [{
+              host:'84.42.63.99'
+            },{
+              host:'78.29.81.187',
+              port:8080
+            },{
+              host:'81.163.97.238',
+              port:8080
+            }]
+          })
 
+          expect(result.status).toEqual(401);
+      });
+
+      it('With low permissions', async () => {
+        const result = await request(app.getHttpServer())
+          .delete('/proxy')
+          .set('Authorization', `Bearer ${userTokens.access_token}`)
+          .send({
+            proxies: [{
+              host:'84.42.63.99'
+            },{
+              host:'78.29.81.187',
+              port:8080
+            },{
+              host:'81.163.97.238',
+              port:8080
+            }]
+          })
+
+          expect(result.status).toEqual(403);
+      });
+
+      it('With invalid data', async () => {
+        const result = await request(app.getHttpServer())
+          .delete('/proxy')
+          .set('Authorization', `Bearer ${adminTokens.access_token}`)
+          .send({
+            proxies: [{
+              host:'84.42.63.99'
+            },{
+              host:'78.29.81.187',
+              port:8080
+            },{
+              host:'81.163.97.238',
+              port:8080
+            }]
+          })
+
+          expect(result.status).toEqual(400);
+      });
+
+      it('With valid data', async () => {
+        const result = await request(app.getHttpServer())
+          .delete('/proxy')
+          .set('Authorization', `Bearer ${adminTokens.access_token}`)
+          .send({
+            proxies: [{
+              host:'84.42.63.99',
+              port:3128
+            },{
+              host:'78.29.81.187',
+              port:8080
+            },{
+              host:'81.163.97.238',
+              port:8080
+            }]
+          })
+
+          expect(result.status).toEqual(200);
+          expect(result.text).toEqual('Proxies has been deleted');
+      });
     })
 
     describe('/update (GET)', () => {

@@ -74,7 +74,7 @@ export const PROXIES = [
         type:0,
         private:false,
         isActive:false,
-        host:'	80.87.197.12',
+        host:'80.87.197.12',
         port:3128,
         country:'',
     },

@@ -7,6 +7,7 @@ import { from } from 'rxjs';
 import { Proxy } from './proxy.entity';
 import { ProxyType } from './types/proxy.type';
 import { AddProxiesOuterDto } from '../common/dto/addProxiesOuter.dto';
+import { DeleteProxiesOuterDto } from './dto/deleteProxiesOuter.dto';
 
 @Injectable()
 export class ProxyService {
@@ -143,6 +144,15 @@ export class ProxyService {
       },
       error => console.log(error),
     )
+  }
 
+  /**
+   * Delete proxies
+   * @param DeleteProxiesOuterDto
+   * @returns Promise<string>
+   */
+  async deleteProxies(dto: DeleteProxiesOuterDto): Promise<any>{
+    const deleteResult = await this.proxyRepository.remove(dto.proxies as Proxy[]);
+    return 'Proxies has been deleted';
   }
 }

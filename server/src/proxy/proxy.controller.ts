@@ -4,6 +4,7 @@ import { ProxyService } from './proxy.service';
 import { UserGuard } from '../auth/user.guard';
 import { AdminGuard } from '../auth/admin.guard';
 import { AddProxiesOuterDto } from '../common/dto/addProxiesOuter.dto';
+import { DeleteProxiesOuterDto } from './dto/deleteProxiesOuter.dto';
 
 @Controller('proxy')
 export class ProxyController {
@@ -23,8 +24,10 @@ export class ProxyController {
 
     @Delete()
     @UseGuards(AdminGuard)
-    async deleteProxy(): Promise<string> {
-        return "Proxy deleted";
+    async deleteProxy(
+        @Body() body: DeleteProxiesOuterDto
+    ): Promise<any> {
+        return this.proxyService.deleteProxies(body);
     }
 
     @Get("update")
