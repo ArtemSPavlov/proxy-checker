@@ -3,7 +3,7 @@ import { Body, Controller, Delete, Get, Post, UseGuards } from '@nestjs/common';
 import { ProxyService } from './proxy.service';
 import { UserGuard } from '../auth/user.guard';
 import { AdminGuard } from '../auth/admin.guard';
-import { AddProxiesOuterDto } from '../common/dto/addProxiesOuter.dto';
+import { AddProxiesOuterDto } from './dto/addProxiesOuter.dto';
 import { DeleteProxiesOuterDto } from './dto/deleteProxiesOuter.dto';
 
 @Controller('proxy')

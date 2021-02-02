@@ -6,7 +6,7 @@ import { from } from 'rxjs';
 
 import { Proxy } from './proxy.entity';
 import { ProxyType } from './types/proxy.type';
-import { AddProxiesOuterDto } from '../common/dto/addProxiesOuter.dto';
+import { AddProxiesOuterDto } from './dto/addProxiesOuter.dto';
 import { DeleteProxiesOuterDto } from './dto/deleteProxiesOuter.dto';
 
 @Injectable()
@@ -39,7 +39,10 @@ export class ProxyService {
                 const response = this.httpService.get(
                   process.env.PROXY_CHECK_URL,
                   {
-                      proxy: proxy,
+                      proxy: {
+                        host: proxy.host,
+                        port: +proxy.host
+                      }
                   }
                 ).toPromise();
                 response.then(
@@ -105,7 +108,10 @@ export class ProxyService {
       this.httpService.get(
         process.env.PROXY_CHECK_URL,
         {
-          proxy: proxy,
+          proxy: {
+            host: proxy.host,
+            port: +proxy.host
+          }
         }
       ).subscribe(
         value => {

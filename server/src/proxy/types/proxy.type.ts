@@ -1,6 +1,6 @@
 export type ProxyType = {
   host: string;
-  port: number;
+  port: string;
   // type?: string;
   country?: string;
   private?: boolean;

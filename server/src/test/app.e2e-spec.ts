@@ -50,10 +50,10 @@ describe('Start e2e tests', () => {
   afterAll(async () => {
 
     if (process.env.NODE_ENV === 'test') {
-      // const connection = app.get(Connection);
-      // await connection.synchronize(true);
-      // await deleteTestData(connection, User);
-      // await deleteTestData(connection, Proxy);
+      const connection = app.get(Connection);
+      await connection.synchronize(true);
+      await deleteTestData(connection, User);
+      await deleteTestData(connection, Proxy);
     }
 
     await Promise.all([
@@ -525,7 +525,7 @@ describe('Start e2e tests', () => {
           {
             type: 1,
             host: '11.11.11.11',
-            port: 1111,
+            port: '1111',
             country: '',
           }]})
 
@@ -545,7 +545,7 @@ describe('Start e2e tests', () => {
           },
           {
             type: 1,
-            port: 1111,
+            port: '1111',
             country: '',
           }]})
 
@@ -560,13 +560,13 @@ describe('Start e2e tests', () => {
             proxies: [{
             type: 0,
             host: '111.111.11.11',
-            port: 1111,
+            port: '1111',
             country: '',
           },
           {
             type: 1,
             host: '11.11.11.11',
-            port: 1111,
+            port: '1111',
             country: '',
           }]})
 
@@ -581,13 +581,14 @@ describe('Start e2e tests', () => {
           .delete('/proxy')
           .send({
             proxies: [{
-              host:'84.42.63.99'
+              host:'84.42.63.99',
+              port:'3128'
             },{
               host:'78.29.81.187',
-              port:8080
+              port:'8080'
             },{
               host:'81.163.97.238',
-              port:8080
+              port:'8080'
             }]
           })
 
@@ -600,13 +601,14 @@ describe('Start e2e tests', () => {
           .set('Authorization', `Bearer ${userTokens.access_token}`)
           .send({
             proxies: [{
-              host:'84.42.63.99'
+              host:'84.42.63.99',
+              port:'3128'
             },{
               host:'78.29.81.187',
-              port:8080
+              port:'8080'
             },{
               host:'81.163.97.238',
-              port:8080
+              port:'8080'
             }]
           })
 
@@ -622,10 +624,10 @@ describe('Start e2e tests', () => {
               host:'84.42.63.99'
             },{
               host:'78.29.81.187',
-              port:8080
+              port:'8080'
             },{
               host:'81.163.97.238',
-              port:8080
+              port:'8080'
             }]
           })
 
@@ -639,13 +641,13 @@ describe('Start e2e tests', () => {
           .send({
             proxies: [{
               host:'84.42.63.99',
-              port:3128
+              port:'3128'
             },{
               host:'78.29.81.187',
-              port:8080
+              port:'8080'
             },{
               host:'81.163.97.238',
-              port:8080
+              port:'8080'
             }]
           })
 

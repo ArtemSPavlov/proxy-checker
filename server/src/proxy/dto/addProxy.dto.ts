@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { IsIP, IsNotEmpty, IsNumber, IsPort, IsString } from 'class-validator';
 
 import { ProxyType } from '../enums/proxyType.enum';
 
@@ -8,11 +8,13 @@ export class AddProxyDto {
 
     @IsString()
     @IsNotEmpty()
+    @IsIP('4')
     readonly host: string;
 
-    @IsNumber()
+    @IsString()
     @IsNotEmpty()
-    readonly port: number;
+    @IsPort()
+    readonly port: string;
 
     @IsString()
     readonly country?: string;
