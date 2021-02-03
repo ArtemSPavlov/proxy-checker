@@ -1,7 +1,7 @@
 import { HttpService, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import * as promiseAny from 'promise.any'
+import * as promiseAny from 'promise-any-polyfill';
 import { from } from 'rxjs';
 
 import { Proxy } from './proxy.entity';
@@ -15,7 +15,11 @@ export class ProxyService {
         @InjectRepository(Proxy)
         private proxyRepository: Repository<Proxy>,
         private httpService: HttpService,
-    ){}
+    ){
+      if(!Promise['any']){
+        Promise.prototype['any'] = promiseAny;
+      }
+    }
 
     /**
      * Save proxies in database
@@ -67,7 +71,7 @@ export class ProxyService {
   async getActiveProxy(proxies: ProxyType[]): Promise<ProxyType>{
         const checkedProxies = proxies.map(el=>this.checkProxy(el));
 
-        return promiseAny(checkedProxies);
+        return Promise.any(checkedProxies);
     }
 
   /**
