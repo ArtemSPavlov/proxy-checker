@@ -474,18 +474,38 @@ describe('Start e2e tests', () => {
 
   describe('[e2e] ProxyController /proxy', () => {
 
-    describe('/ (GET)', () => {
+    // describe('/ (GET)', () => {
+
+    //   it('Without access token', async () => {
+    //     const result = await request(app.getHttpServer())
+    //       .get('/proxy')
+
+    //       expect(result.status).toEqual(401);
+    //   });
+
+    //   it('With valid token', async () => {
+    //     const result = await request(app.getHttpServer())
+    //       .get('/proxy')
+    //       .set('Authorization', `Bearer ${userTokens.access_token}`)
+
+    //       expect(result.status).toEqual(200);
+    //       expect(result.body[3].host).toEqual('194.190.136.35');
+    //       expect(result.body[5].host).toEqual('81.163.97.238');
+    //   });
+    // })
+
+    describe('/list (GET)', () => {
 
       it('Without access token', async () => {
         const result = await request(app.getHttpServer())
-          .get('/proxy')
+          .get('/proxy/list/10')
 
           expect(result.status).toEqual(401);
       });
 
-      it('Without valid token', async () => {
+      it('With valid token', async () => {
         const result = await request(app.getHttpServer())
-          .get('/proxy')
+          .get('/proxy/list/10')
           .set('Authorization', `Bearer ${userTokens.access_token}`)
 
           expect(result.status).toEqual(200);
