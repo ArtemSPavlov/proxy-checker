@@ -35,7 +35,7 @@
           Password is <strong>required</strong>
         </mat-error>
       </mat-form-field>
-      <button class="submit-button" type="submit" mat-raised-button color="primary">Sing Up</button>
+      <button class="submit-button" type="submit" mat-raised-button color="primary" [disabled]="!this.form.valid">Sing Up</button>
     </form>
 
   </mat-card-content>
