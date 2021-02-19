@@ -4,23 +4,37 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class AuthService {
-  private tokenKey = "auth-token";
+  private tokenKeyAccess = "auth-token";
+  private tokenKeyRefresh = "refresh-token";
 
   constructor() {}
 
-  getTokenKey(): string {
-    return this.tokenKey;
+  getAccessTokenKey(): string {
+    return this.tokenKeyAccess;
+  }
+
+  getRefreshTokenKey(): string {
+    return this.tokenKeyRefresh;
   }
 
   getAccessToken(): string {
-    return localStorage.getItem(this.tokenKey);
+    return localStorage.getItem(this.tokenKeyAccess);
   }
 
-  setToken(token: string): void {
-    localStorage.setItem(this.tokenKey, token);
+  getRefreshToken(): string {
+    return localStorage.getItem(this.tokenKeyRefresh);
   }
 
-  removeToken(): void {
-    localStorage.removeItem(this.tokenKey);
+  setAccessToken(token: string): void {
+    localStorage.setItem(this.tokenKeyAccess, token);
+  }
+
+  setRefreshToken(token: string): void {
+    localStorage.setItem(this.tokenKeyRefresh, token);
+  }
+
+  removeTokens(): void {
+    localStorage.removeItem(this.tokenKeyAccess);
+    localStorage.removeItem(this.tokenKeyRefresh);
   }
 }

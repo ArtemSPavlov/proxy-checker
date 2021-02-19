@@ -22,7 +22,6 @@ export class SingInComponent implements OnInit {
     private singInService: SingInService,
     private store: Store<IAppState>
     ) {
-      // console.log('Route: ', route);
       this.store.pipe(select(userResponseError)).subscribe(
         data => {
           this.error = data
@@ -32,7 +31,6 @@ export class SingInComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
-      console.log('Params: ', +params.get('productId'));
       // this.product = products[+params.get('productId')];
     });
 

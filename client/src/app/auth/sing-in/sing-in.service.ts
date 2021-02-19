@@ -7,7 +7,6 @@ import { IAppState } from '../../store/state/app.state';
 
 import { ValidateUserDto } from '../../dto/validate-user.dto';
 import { AuthService } from '../auth.service';
-import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -26,7 +25,8 @@ export class SingInService {
   singIn(requestData: ValidateUserDto): void {
     const response = this.apiService.loginUser(requestData);
     response.subscribe(value => {
-      this.authService.setToken(value);
+      const tokens = JSON.parse(value);
+      this.authService.setAccessToken(tokens.access_token);
       this.store.dispatch(new LoadUser);
       this.router.navigate(['']);
     });
