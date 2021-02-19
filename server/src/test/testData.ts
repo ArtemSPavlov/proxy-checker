@@ -43,7 +43,7 @@ export const PROXIES = [
         private:false,
         isActive:false,
         host:'185.103.246.59',
-        port:8080,
+        port:'8080',
         country:'',
     },
     {
@@ -51,7 +51,7 @@ export const PROXIES = [
         private:false,
         isActive:false,
         host:'84.42.63.99',
-        port:3128,
+        port:'3128',
         country:'',
     },
     {
@@ -59,7 +59,7 @@ export const PROXIES = [
         private:false,
         isActive:false,
         host:'78.29.81.187',
-        port:8080,
+        port:'8080',
         country:'',
     },
     {
@@ -67,15 +67,15 @@ export const PROXIES = [
         private:false,
         isActive:false,
         host:'194.190.136.35',
-        port:8080,
+        port:'8080',
         country:'',
     },
     {
         type:0,
         private:false,
         isActive:false,
-        host:'	80.87.197.12',
-        port:3128,
+        host:'80.87.197.12',
+        port:'3128',
         country:'',
     },
     {
@@ -83,7 +83,7 @@ export const PROXIES = [
         private:false,
         isActive:false,
         host:'81.163.97.238',
-        port:8080,
+        port:'8080',
         country:'',
     },
     {
@@ -91,7 +91,7 @@ export const PROXIES = [
         private:false,
         isActive:false,
         host:'178.167.25.212',
-        port:8080,
+        port:'8080',
         country:'',
     },
     {
@@ -99,7 +99,7 @@ export const PROXIES = [
         private:false,
         isActive:false,
         host:'188.166.254.252',
-        port:8080,
+        port:'8080',
         country:'',
     },
     {
@@ -107,7 +107,7 @@ export const PROXIES = [
         private:false,
         isActive:false,
         host:'77.238.138.171',
-        port:80,
+        port:'80',
         country:'',
     },
     {
@@ -115,7 +115,7 @@ export const PROXIES = [
         private:false,
         isActive:false,
         host:'195.189.98.112',
-        port:3128,
+        port:'3128',
         country:'',
     },
 ]

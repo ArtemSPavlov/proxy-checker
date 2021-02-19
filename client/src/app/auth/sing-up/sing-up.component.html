@@ -1,0 +1,42 @@
+<mat-card class="align-center form-card">
+  <mat-card-subtitle class="error-message">
+    <!-- <span *ngIf="error?.status == 401">
+      authorization required
+    </span> -->
+  </mat-card-subtitle>
+  <mat-card-title class="text-center">REGISTRATION</mat-card-title>
+  <mat-card-content>
+
+    <form class="align-center" [formGroup]="form" (submit)="submitForm()">
+      <mat-form-field>
+        <input matInput placeholder="Name" formControlName="login" required minlength="3"/>
+        <mat-error *ngIf="form.controls.login.hasError('minlength') && !form.controls.login.hasError('required')">
+          Login must be at least {{form.controls.login.errors.minlength.requiredLength}} characters
+        </mat-error>
+        <mat-error *ngIf="form.controls.login.hasError('required')">
+          Login is <strong>required</strong>
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput placeholder="E-mail" formControlName="email" required email/>
+        <mat-error *ngIf="form.controls.email.hasError('email') && !form.controls.email.hasError('required')">
+          Please enter a valid email address
+        </mat-error>
+        <mat-error *ngIf="form.controls.email.hasError('required')">
+          Email is <strong>required</strong>
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <input type="password" matInput placeholder="Password" formControlName="password" required minlength="3"/>
+        <mat-error *ngIf="form.controls.password.hasError('minlength') && !form.controls.password.hasError('required')">
+          Password must be at least {{form.controls.password.errors.minlength.requiredLength}} characters
+        </mat-error>
+        <mat-error *ngIf="form.controls.password.hasError('required')">
+          Password is <strong>required</strong>
+        </mat-error>
+      </mat-form-field>
+      <button class="submit-button" type="submit" mat-raised-button color="primary">Sing Up</button>
+    </form>
+
+  </mat-card-content>
+</mat-card>

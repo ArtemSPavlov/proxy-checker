@@ -180,7 +180,7 @@ describe('Start e2e tests', () => {
           })
 
           expect(result.status).toEqual(200);
-          expect(result.text).toEqual('Password change!');
+          expect(result.text).toEqual('Password changed!');
       });
     });
 
@@ -471,5 +471,235 @@ describe('Start e2e tests', () => {
       });
     });
   });
+
+  describe('[e2e] ProxyController /proxy', () => {
+
+    // describe('/ (GET)', () => {
+
+    //   it('Without access token', async () => {
+    //     const result = await request(app.getHttpServer())
+    //       .get('/proxy')
+
+    //       expect(result.status).toEqual(401);
+    //   });
+
+    //   it('With valid token', async () => {
+    //     const result = await request(app.getHttpServer())
+    //       .get('/proxy')
+    //       .set('Authorization', `Bearer ${userTokens.access_token}`)
+
+    //       expect(result.status).toEqual(200);
+    //       expect(result.body[3].host).toEqual('194.190.136.35');
+    //       expect(result.body[5].host).toEqual('81.163.97.238');
+    //   });
+    // })
+
+    describe('/list (GET)', () => {
+
+      it('Without access token', async () => {
+        const result = await request(app.getHttpServer())
+          .get('/proxy/list/10')
+
+          expect(result.status).toEqual(401);
+      });
+
+      it('With valid token', async () => {
+        const result = await request(app.getHttpServer())
+          .get('/proxy/list/10')
+          .set('Authorization', `Bearer ${userTokens.access_token}`)
+
+          expect(result.status).toEqual(200);
+          expect(result.body[3].host).toEqual('194.190.136.35');
+          expect(result.body[5].host).toEqual('81.163.97.238');
+      });
+    })
+
+    describe('/ (POST)', () => {
+
+      it('Without access token', async () => {
+        const result = await request(app.getHttpServer())
+          .post('/proxy')
+
+          expect(result.status).toEqual(401);
+      });
+
+      it('With low permissions', async () => {
+        const result = await request(app.getHttpServer())
+          .post('/proxy')
+          .set('Authorization', `Bearer ${userTokens.access_token}`)
+
+          expect(result.status).toEqual(403);
+      });
+
+      it('With invalid data', async () => {
+        const result = await request(app.getHttpServer())
+          .post('/proxy')
+          .set('Authorization', `Bearer ${adminTokens.access_token}`)
+          .send({
+            proxies: [{
+            type: 0,
+            host: '111.111.11.11',
+            port: 'abcd',
+            country: '',
+          },
+          {
+            type: 1,
+            host: '11.11.11.11',
+            port: '1111',
+            country: '',
+          }]})
+
+          expect(result.status).toEqual(400);
+      });
+
+      it('With invalid data', async () => {
+        const result = await request(app.getHttpServer())
+          .post('/proxy')
+          .set('Authorization', `Bearer ${adminTokens.access_token}`)
+          .send({
+            proxies: [{
+            type: 0,
+            host: '111.111.11.11',
+            port: 'abcd',
+            country: '',
+          },
+          {
+            type: 1,
+            port: '1111',
+            country: '',
+          }]})
+
+          expect(result.status).toEqual(400);
+      });
+
+      it('With valid data', async () => {
+        const result = await request(app.getHttpServer())
+          .post('/proxy')
+          .set('Authorization', `Bearer ${adminTokens.access_token}`)
+          .send({
+            proxies: [{
+            type: 0,
+            host: '111.111.11.11',
+            port: '1111',
+            country: '',
+          },
+          {
+            type: 1,
+            host: '11.11.11.11',
+            port: '1111',
+            country: '',
+          }]})
+
+          expect(result.status).toEqual(201);
+          expect(result.text).toEqual('Saved in database');
+      });
+    })
+
+    describe('/ (DELETE)', () => {
+      it('Without access token', async () => {
+        const result = await request(app.getHttpServer())
+          .delete('/proxy')
+          .send({
+            proxies: [{
+              host:'84.42.63.99',
+              port:'3128'
+            },{
+              host:'78.29.81.187',
+              port:'8080'
+            },{
+              host:'81.163.97.238',
+              port:'8080'
+            }]
+          })
+
+          expect(result.status).toEqual(401);
+      });
+
+      it('With low permissions', async () => {
+        const result = await request(app.getHttpServer())
+          .delete('/proxy')
+          .set('Authorization', `Bearer ${userTokens.access_token}`)
+          .send({
+            proxies: [{
+              host:'84.42.63.99',
+              port:'3128'
+            },{
+              host:'78.29.81.187',
+              port:'8080'
+            },{
+              host:'81.163.97.238',
+              port:'8080'
+            }]
+          })
+
+          expect(result.status).toEqual(403);
+      });
+
+      it('With invalid data', async () => {
+        const result = await request(app.getHttpServer())
+          .delete('/proxy')
+          .set('Authorization', `Bearer ${adminTokens.access_token}`)
+          .send({
+            proxies: [{
+              host:'84.42.63.99'
+            },{
+              host:'78.29.81.187',
+              port:'8080'
+            },{
+              host:'81.163.97.238',
+              port:'8080'
+            }]
+          })
+
+          expect(result.status).toEqual(400);
+      });
+
+      it('With valid data', async () => {
+        const result = await request(app.getHttpServer())
+          .delete('/proxy')
+          .set('Authorization', `Bearer ${adminTokens.access_token}`)
+          .send({
+            proxies: [{
+              host:'84.42.63.99',
+              port:'3128'
+            },{
+              host:'78.29.81.187',
+              port:'8080'
+            },{
+              host:'81.163.97.238',
+              port:'8080'
+            }]
+          })
+
+          expect(result.status).toEqual(200);
+          expect(result.text).toEqual('Proxies has been deleted');
+      });
+    })
+
+    describe('/update (GET)', () => {
+      it('Without access token', async () => {
+        const result = await request(app.getHttpServer())
+          .get('/proxy/update')
+
+          expect(result.status).toEqual(401);
+      });
+
+      it('With low permissions', async () => {
+        const result = await request(app.getHttpServer())
+          .get('/proxy/update')
+          .set('Authorization', `Bearer ${userTokens.access_token}`)
+
+          expect(result.status).toEqual(403);
+      });
+
+      // it('With valid data', async () => {
+      //   const result = await request(app.getHttpServer())
+      //     .get('/proxy/update')
+      //     .set('Authorization', `Bearer ${adminTokens.access_token}`)
+
+      //     expect(result.status).toEqual(200);
+      // });
+    })
+  })
 
 });

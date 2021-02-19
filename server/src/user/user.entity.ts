@@ -7,18 +7,18 @@ export class User {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column({type: "varchar", length: 255 })
+    @Column({ type: "varchar", length: 1000 })
     login: string;
 
     @Column({ unique: true })
     @Generated("uuid")
     uuid: string;
 
-    @Column({type: "varchar", length: 255, unique: true })
+    @Column({ type: "varchar", length: 1000, unique: true })
     email: string;
 
     @Exclude()
-    @Column({type: "varchar", length: 255 })
+    @Column({ type: "varchar", length: 1000 })
     password: string;
 
     @Column({default: false})
@@ -31,6 +31,6 @@ export class User {
     })
     role: Roles
 
-    @CreateDateColumn()
+    @CreateDateColumn({type: "varchar", length: 1000 })
     createTime: string;
 }

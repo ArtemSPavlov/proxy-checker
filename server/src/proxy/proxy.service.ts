@@ -1,12 +1,13 @@
 import { HttpService, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import * as promiseAny from 'promise.any'
+import 'promise-any-polyfill';
 import { from } from 'rxjs';
 
-import { AddProxyDto } from '../common/dto/addProxy.dto';
 import { Proxy } from './proxy.entity';
 import { ProxyType } from './types/proxy.type';
+import { AddProxiesOuterDto } from './dto/addProxiesOuter.dto';
+import { DeleteProxiesOuterDto } from './dto/deleteProxiesOuter.dto';
 
 @Injectable()
 export class ProxyService {
@@ -18,16 +19,12 @@ export class ProxyService {
 
     /**
      * Save proxies in database
-     * @param dto AddProxyDto[]
+     * @param dto AddProxiesOuterDto
      * @returns Promise<void | string>
      */
-    async addProxy(dto: AddProxyDto[]): Promise<string>{
-        try {
-            await this.proxyRepository.save(dto);
-            return "Saved in database";
-        } catch (error) {
-            return error;
-        }
+    async addProxy(dto: AddProxiesOuterDto): Promise<string>{
+          await this.proxyRepository.save(dto.proxies);
+          return "Saved in database";
     }
 
   /**
@@ -42,14 +39,20 @@ export class ProxyService {
                 const response = this.httpService.get(
                   process.env.PROXY_CHECK_URL,
                   {
-                      proxy: proxy,
+                      proxy: {
+                        host: proxy.host,
+                        port: +proxy.port
+                      }
                   }
                 ).toPromise();
                 response.then(
-                  res=>{
+                  res => {
                     if(res.data == proxy.host){
                       resolve(proxy);
                     }
+                    // reject('!!');
+                    console.log('Reject: ', proxy);
+                    return;
                   }
                 )
             } catch (error) {
@@ -67,7 +70,7 @@ export class ProxyService {
   async getActiveProxy(proxies: ProxyType[]): Promise<ProxyType>{
         const checkedProxies = proxies.map(el=>this.checkProxy(el));
 
-        return promiseAny(checkedProxies);
+        return Promise.any(checkedProxies);
     }
 
   /**
@@ -108,7 +111,10 @@ export class ProxyService {
       this.httpService.get(
         process.env.PROXY_CHECK_URL,
         {
-          proxy: proxy,
+          proxy: {
+            host: proxy.host,
+            port: +proxy.port
+          }
         }
       ).subscribe(
         value => {
@@ -129,7 +135,7 @@ export class ProxyService {
         error => {
           this.proxyRepository.update(proxy, {isActive: false})
         }),
-        ()=>console.log("Update complete!!");
+        () => console.log("Update complete!!");
     } catch (e) {
       console.log(e)
     }
@@ -147,6 +153,15 @@ export class ProxyService {
       },
       error => console.log(error),
     )
+  }
 
+  /**
+   * Delete proxies
+   * @param DeleteProxiesOuterDto
+   * @returns Promise<string>
+   */
+  async deleteProxies(dto: DeleteProxiesOuterDto): Promise<string>{
+    await this.proxyRepository.remove(dto.proxies as Proxy[]);
+    return 'Proxies has been deleted';
   }
 }

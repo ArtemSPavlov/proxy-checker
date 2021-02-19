@@ -1,0 +1,4 @@
+<div class="wrapper" *ngIf="error">
+    <h2 class="title" *ngIf="error.status">{{error?.status}} error!</h2>
+    <p class="message">{{error?.statusText}}</p>
+</div>

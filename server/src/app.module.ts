@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module} from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 
@@ -11,6 +11,8 @@ import { AuthService } from './auth/auth.service';
 import { ProxyModule } from './proxy/proxy.module';
 
 import configuration from './config/configuration';
+import { APP_PIPE } from '@nestjs/core';
+import { CustomValidationPipe } from './common/customValidation.pipe';
 
 @Module({
   imports: [
@@ -29,7 +31,14 @@ import configuration from './config/configuration';
     TypeOrmModule.forFeature([Token]),
   ],
   controllers: [AppController],
-  providers: [AppService, AuthService],
+  providers: [
+    AppService,
+    AuthService,
+    {
+      provide: APP_PIPE,
+      useClass: CustomValidationPipe,
+    }
+  ],
   exports: [AuthModule],
 })
 export class AppModule {

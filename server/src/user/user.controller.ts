@@ -21,7 +21,6 @@ import { UserService } from './user.service';
 import { User } from './user.entity';
 import { CreateUserDto } from './dto/createUser.dto';
 import { ValidateUserDto } from './dto/validateUser.dto';
-import { ValidationPipe } from '../common/validation.pipe';
 import { EditUserDto } from './dto/editUser.dto';
 import { EditUserLoginDto } from './dto/editUserLogin.dto';
 import { Tokens } from './types/tokens.type';
@@ -41,7 +40,6 @@ export class UserController {
     }
 
     @Post()
-    @UsePipes(new ValidationPipe())
     async createUser(
         @Body() createUserDto: CreateUserDto
     ): Promise<string> {
@@ -50,7 +48,6 @@ export class UserController {
 
     @Put()
     @UseGuards(UserGuard)
-    @UsePipes(new ValidationPipe())
     async changeUser(
         @Req() req: any,
         @Body() editUserDto: EditUserDto
@@ -61,7 +58,6 @@ export class UserController {
 
     @Patch()
     @UseGuards(UserGuard)
-    @UsePipes(new ValidationPipe())
     async password(
         @Req() req: any,
         @Body() password: ValidateUserDto
@@ -71,7 +67,6 @@ export class UserController {
     }
 
     @Post('login')
-    @UsePipes(new ValidationPipe())
     async signIn(
         @Body() validateUserDto: ValidateUserDto
     ): Promise<Tokens>{
@@ -87,7 +82,6 @@ export class UserController {
 
     @Put('edit/:id')
     @UseGuards(AdminGuard)
-    @UsePipes(new ValidationPipe())
     async edit(
         @Param('id', ParseIntPipe) id: number,
         @Body() editUserLoginDto: EditUserLoginDto

@@ -1,35 +1,52 @@
-import { Body, Controller, Delete, Get, Post, UseGuards } from '@nestjs/common';
-import { ApiBody, ApiTags } from '@nestjs/swagger';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, UseGuards } from '@nestjs/common';
 
 import { ProxyService } from './proxy.service';
-import { AddProxyDto } from '../common/dto/addProxy.dto';
 import { UserGuard } from '../auth/user.guard';
+import { AdminGuard } from '../auth/admin.guard';
+import { AddProxiesOuterDto } from './dto/addProxiesOuter.dto';
+import { DeleteProxiesOuterDto } from './dto/deleteProxiesOuter.dto';
+import { ProxyType } from './types/proxy.type';
 
 @Controller('proxy')
 export class ProxyController {
     constructor(private readonly proxyService: ProxyService){}
 
+    // @Get()
+    // @UseGuards(UserGuard)
+    // async getProxy(): Promise<ProxyType | string>{
+    //     const proxies = await this.proxyService.getActiveProxies(100);
+    //     if(!proxies.length){
+    //         return 'No active proxy in proxy list';
+    //     }
+    //     console.log('Proxies: ', proxies);
+    //     return this.proxyService.getActiveProxy(proxies);
+    // }
+
+    @Get('list/:count')
     @UseGuards(UserGuard)
-    @Get()
-    async getProxy(){
-        return this.proxyService.getProxies(10);
+    async getProxyList(
+        @Param('count', ParseIntPipe) count: number,
+    ){
+        return this.proxyService.getProxies(count);
     }
 
     @Post()
-    @ApiTags('proxy')
-    @ApiBody({ type: [AddProxyDto] })
-    async saveProxy(@Body() body: AddProxyDto[]): Promise<string> {
+    @UseGuards(AdminGuard)
+    async saveProxy(@Body() body: AddProxiesOuterDto): Promise<string> {
         return this.proxyService.addProxy(body);
     }
 
     @Delete()
-    @ApiTags('proxy')
-    async deleteProxy(): Promise<string> {
-        return "Proxy deleted";
+    @UseGuards(AdminGuard)
+    async deleteProxy(
+        @Body() body: DeleteProxiesOuterDto
+    ): Promise<string> {
+        return this.proxyService.deleteProxies(body);
     }
 
-    @Get("update")
-    async updatedProxies(){
+    @Get('update')
+    @UseGuards(AdminGuard)
+    async updatedProxies(): Promise<void>{
         const proxyList = await this.proxyService.getProxies();
         return this.proxyService.updateProxies(proxyList);
     }

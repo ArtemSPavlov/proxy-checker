@@ -1,0 +1,31 @@
+<mat-toolbar color="primary">
+  <a class="logo-link" mat-button routerLink="">Proxy</a>
+  <span class="spacer">
+  </span>
+  <div *ngIf="authorizedUser?.login; else authBlock">
+    <a class="user_link" mat-button routerLink="user">
+      <mat-icon class="user_icon" aria-hidden="false" aria-label="Example home icon">how_to_reg</mat-icon>
+      <span>{{authorizedUser?.login}}</span>
+    </a>
+    <button mat-button [matMenuTriggerFor]="menu">
+      <mat-icon class="user_menu_icon" aria-hidden="false" aria-label="Example home icon">more_vert</mat-icon>
+    </button>
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item (click)="logout()">Logout</button>
+    </mat-menu>
+  </div>
+  <ng-template #authBlock>
+    <a mat-button routerLink="auth">
+      <mat-icon class="auth_icon" aria-hidden="false" aria-label="Example home icon">account_box</mat-icon>
+      <span>Login</span>
+    </a>
+    <a mat-button routerLink="auth/sing-up">
+      <mat-icon class="auth_icon" aria-hidden="false" aria-label="Example home icon">person</mat-icon>
+      <span>Auth</span>
+    </a>
+  </ng-template>
+</mat-toolbar>
+<div class="content-wrapper">
+  <router-outlet></router-outlet>
+</div>
+

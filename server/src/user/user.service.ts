@@ -51,10 +51,11 @@ export class UserService {
      */
     async validateUser(dto: ValidateUserDto): Promise<Tokens>{
         const user = await this.usersRepository.findOne({email: dto.email});
+
         if(user){
             if(await bcrypt.compare(dto.password, user.password)){
                 user.password = dto.password;
-                const refreshToken = await (await this.authService.getRefreshToken(user)).token;
+                const refreshToken = (await this.authService.getRefreshToken(user)).token;
                 const accessToken = await this.authService.getAccessToken(user);
 
                 return {

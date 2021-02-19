@@ -6,7 +6,7 @@ import {
     PrimaryColumn,
 } from 'typeorm';
 
-import { ProxyType } from '../common/enums/proxyType.enum';
+import { ProxyType } from './enums/proxyType.enum';
 
 @Entity()
 export class Proxy {
@@ -18,17 +18,17 @@ export class Proxy {
     })
     type: ProxyType;
 
-    @Column({default: false})
+    @Column({ default: false })
     private: boolean;
 
-    @Column({default: false})
+    @Column({ default: false })
     isActive: boolean;
 
-    @PrimaryColumn({type: "varchar", length: 255 })
+    @PrimaryColumn({ type: "varchar", length: 255 })
     host: string;
 
-    @PrimaryColumn({ type: "int", width: 200 })
-    port: number;
+    @PrimaryColumn({ type: "varchar", length: 255 })
+    port: string;
 
     @Column({type: "varchar", length: 255, nullable: true })
     country: string;
