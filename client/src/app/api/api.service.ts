@@ -26,19 +26,17 @@ export class ApiService {
       {responseType: 'json'}
     ).pipe(
       catchError(err => {
-        console.log("From http: ", err);
         return throwError(err);
     })
     )
   }
 
-  getProxies(): Observable<any>{
+  getProxies(count: number): Observable<any>{
     return this.http.get(
-      this.apiUrl + 'proxy',
+      this.apiUrl + `proxy/list/${count}`,
       {responseType: 'text'}
     ).pipe(
       catchError(err => {
-        console.log("From http: ", err);
         return throwError(err);
     })
     )
@@ -46,7 +44,7 @@ export class ApiService {
 
   loginUser(requestData: ValidateUserDto){
     return this.http.post(
-      this.apiUrl + "user/sing-in",
+      this.apiUrl + "user/login",
       requestData,
       {responseType: 'text'}
     );
@@ -54,9 +52,8 @@ export class ApiService {
 
 
   registration(requestData: CreateUserDto){
-    console.log("Data: ", requestData);
     return this.http.post(
-      this.apiUrl + "user/registration",
+      this.apiUrl + "user",
       requestData,
       {responseType: 'text'}
     );

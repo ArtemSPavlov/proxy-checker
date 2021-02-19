@@ -27,7 +27,7 @@ export class UserService {
   }
 
   removeAuthorizedUser(): void {
-    this.authService.removeToken();
+    this.authService.removeTokens();
     this.store.dispatch(new RemoveUser);
   }
 }

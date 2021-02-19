@@ -35,7 +35,6 @@ export class SingUpComponent implements OnInit {
           .then(this.response)
           .catch(this.error);
 
-        console.log("Response: ", this.response);
         // this.router.navigate(['auth']);
       }
   }

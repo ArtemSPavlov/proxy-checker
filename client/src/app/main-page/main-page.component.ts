@@ -26,7 +26,7 @@ export class MainPageComponent implements OnInit {
     private apiService: ApiService,
     private store: Store<IAppState>
     ) {
-      this.apiService.getProxies().subscribe(
+      this.apiService.getProxies(10).subscribe(
         data => {this.proxies = JSON.parse(data)},
         error => this.error = error
       );
