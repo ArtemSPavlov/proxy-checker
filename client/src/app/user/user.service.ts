@@ -30,4 +30,11 @@ export class UserService {
     this.authService.removeTokens();
     this.store.dispatch(new RemoveUser);
   }
+
+  checkAdminRight(user: any): boolean{
+    if(user && user?.role === 1){
+      return true;
+    }
+    return false;
+  }
 }

@@ -27,6 +27,8 @@ import { NotFoundComponent } from './not-found/not-found.component';
 import { ErrorInterceptor } from './interceptors/error.interceptor';
 import { ErrorComponent } from './error/error.component';
 import { ErrorService } from './error/error.service';
+import { AdminModule } from './admin/admin.module';
+
 
 @NgModule({
   declarations: [
@@ -53,7 +55,8 @@ import { ErrorService } from './error/error.service';
     HttpClientModule,
     MatTableModule,
     UserModule,
-    MatMenuModule
+    MatMenuModule,
+    AdminModule
   ],
   providers: [
     MainPageService,
