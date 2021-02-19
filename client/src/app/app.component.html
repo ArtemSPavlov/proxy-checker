@@ -11,6 +11,8 @@
       <mat-icon class="user_menu_icon" aria-hidden="false" aria-label="Example home icon">more_vert</mat-icon>
     </button>
     <mat-menu #menu="matMenu">
+      <a mat-menu-item routerLink="user">Edit</a>
+      <a mat-menu-item routerLink="user/change-password">Password</a>
       <button mat-menu-item (click)="logout()">Logout</button>
     </mat-menu>
   </div>
