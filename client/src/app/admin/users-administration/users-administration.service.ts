@@ -1,6 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 import { ConfigService } from 'src/app/config/config.service';
+import { User } from 'src/app/types/user.type';
 
 @Injectable({
   providedIn: 'root'
@@ -16,9 +18,21 @@ export class UsersAdministrationService {
     this.apiUrl = this.configService.getConfig().server;
   }
 
-  getUsersList(){
+  getUsersList(): Observable<User>{
     return this.http.get(
       this.apiUrl + 'user/list',
+      {responseType: 'json'}
+    ) as Observable<User>;
+  }
+
+  changeUserStatus(id: number, newStatus: boolean){
+    const requestData = {
+      isActive: newStatus
+    }
+
+    return this.http.put(
+      this.apiUrl + `user/edit/${id}`,
+      requestData,
       {responseType: 'json'}
     );
   }

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { User } from 'src/app/types/user.type';
 import { UsersAdministrationService } from './users-administration.service';
 
 @Component({
@@ -8,7 +9,7 @@ import { UsersAdministrationService } from './users-administration.service';
 })
 export class UsersAdministrationComponent implements OnInit {
 
-  public usersList: any;
+  public usersList: User;
   public displayedColumns: string[] = ['index', 'login', 'uuid', 'email', 'role', 'status', 'buttons'];
 
   constructor(

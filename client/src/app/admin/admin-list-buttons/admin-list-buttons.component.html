@@ -1,29 +1,32 @@
-<div>
-    <a *ngIf="!status; else deactivateUser" href="">
-        <span class="material-icons">
-            check
-        </span>
-        <span class="button-title">Activate</span>
-    </a>
-    <ng-template #deactivateUser>
-        <a class="alert" href="">
+<ul>
+    <li>
+        <span class="user-list-button" *ngIf="!user?.isActive; else deactivateUser">
             <span class="material-icons">
-                close
+                check
             </span>
-            <span class="button-title">Deactivate</span>
-        </a>
-    </ng-template>
-
-    <br>
-    <a routerLink="edit">
-        <span class="material-icons">mode_edit</span>
-        <span class="button-title">Edit</span>
-    </a>
-    <br>
-    <a class="alert" href="">
-        <span class="material-icons">
-            person_off
+            <span class="button-title">Activate</span>
         </span>
-        <span class="button-title">Delete</span>
-    </a>
-</div>
+        <ng-template #deactivateUser>
+            <span class="user-list-button alert" href="">
+                <span class="material-icons">
+                    close
+                </span>
+                <span class="button-title">Deactivate</span>
+            </span>
+        </ng-template>
+    </li>
+    <li>
+        <a class="user-list-button" routerLink="edit">
+            <span class="material-icons">mode_edit</span>
+            <span class="button-title">Edit</span>
+        </a>
+    </li>
+    <li>
+        <span class="user-list-button alert" href="">
+            <span class="material-icons">
+                person_off
+            </span>
+            <span class="button-title">Delete</span>
+        </span>
+    </li>
+</ul>

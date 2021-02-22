@@ -1,4 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { User } from 'src/app/types/user.type';
+import { UsersAdministrationService } from '../users-administration/users-administration.service';
 
 @Component({
   selector: 'app-admin-list-buttons',
@@ -6,11 +8,17 @@ import { Component, Input, OnInit } from '@angular/core';
   styleUrls: ['./admin-list-buttons.component.scss']
 })
 export class AdminListButtonsComponent implements OnInit {
-  @Input() status: boolean;
+  @Input() user: User;
 
-  constructor() { }
+  constructor(
+    private usersAdministrationService: UsersAdministrationService
+  ) { }
 
   ngOnInit(): void {
+  }
+
+  changeActivityStatus(){
+    this.usersAdministrationService.changeUserStatus(this.user.id, !this.user.isActive);
   }
 
 }
