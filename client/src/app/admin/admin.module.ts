@@ -7,6 +7,8 @@ import { UsersAdministrationComponent } from './users-administration/users-admin
 import { ProxiesAdministrationComponent } from './proxies-administration/proxies-administration.component';
 import { AdminNavComponent } from './admin-nav/admin-nav.component';
 import { MatListModule } from '@angular/material/list';
+import { MatTableModule } from '@angular/material/table';
+import { AdminListButtonsComponent } from './admin-list-buttons/admin-list-buttons.component';
 
 
 
@@ -16,11 +18,13 @@ import { MatListModule } from '@angular/material/list';
     UsersAdministrationComponent,
     ProxiesAdministrationComponent,
     AdminNavComponent,
+    AdminListButtonsComponent,
   ],
   imports: [
     CommonModule,
     AdminRoutingModule,
-    MatListModule
+    MatListModule,
+    MatTableModule
   ]
 })
 export class AdminModule { }

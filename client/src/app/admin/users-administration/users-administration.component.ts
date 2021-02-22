@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { UsersAdministrationService } from './users-administration.service';
 
 @Component({
   selector: 'app-users-administration',
@@ -7,9 +8,21 @@ import { Component, OnInit } from '@angular/core';
 })
 export class UsersAdministrationComponent implements OnInit {
 
-  constructor() { }
+  public usersList: any;
+  public displayedColumns: string[] = ['index', 'login', 'uuid', 'email', 'role', 'status', 'buttons'];
+
+  constructor(
+    private usersAdministrationService: UsersAdministrationService
+  ) { }
 
   ngOnInit(): void {
+    const users = this.usersAdministrationService.getUsersList();
+    users.subscribe(
+      data => {
+        console.log('Users: ', data);
+        this.usersList = data;
+    }
+    )
   }
 
 }
