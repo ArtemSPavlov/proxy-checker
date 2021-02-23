@@ -9,7 +9,7 @@ import { UsersAdministrationService } from './users-administration.service';
 })
 export class UsersAdministrationComponent implements OnInit {
 
-  public usersList: User;
+  public usersList: User[];
   public displayedColumns: string[] = ['index', 'login', 'uuid', 'email', 'role', 'status', 'buttons'];
 
   constructor(
@@ -20,7 +20,7 @@ export class UsersAdministrationComponent implements OnInit {
     this.getUsers();
   }
 
-  getUsers(){
+  getUsers(): void{
     this
       .usersAdministrationService
       .getUsersList()
@@ -29,6 +29,15 @@ export class UsersAdministrationComponent implements OnInit {
           this.usersList = data;
         }
       )
+  }
+
+  updateUser(updatedUser: User): void{
+    this.usersList = this.usersList.map(user => {
+      if(user.uuid === updatedUser.uuid){
+        return updatedUser;
+      }
+      return user;
+    });
   }
 
 }

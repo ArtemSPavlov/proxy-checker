@@ -18,11 +18,11 @@ export class UsersAdministrationService {
     this.apiUrl = this.configService.getConfig().server;
   }
 
-  getUsersList(): Observable<User>{
+  getUsersList(): Observable<User[]>{
     return this.http.get(
       this.apiUrl + 'user/list',
       {responseType: 'json'}
-    ) as Observable<User>;
+    ) as Observable<User[]>;
   }
 
   changeUserStatus(user: User, newStatus: boolean){
