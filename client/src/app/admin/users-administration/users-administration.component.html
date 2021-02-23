@@ -54,7 +54,7 @@
       <ng-container matColumnDef="buttons">
         <th mat-header-cell *matHeaderCellDef> Edit </th>
         <td mat-cell *matCellDef="let element">
-            <app-admin-list-buttons [user]="element" (changeStatus)="updateUser($event)"></app-admin-list-buttons>
+            <app-admin-list-buttons [user]="element" (changeStatus)="updateUser($event)" (deleteUser)="openDialog($event)"></app-admin-list-buttons>
         </td>
       </ng-container>
 

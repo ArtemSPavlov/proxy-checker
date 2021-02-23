@@ -9,6 +9,8 @@ import { AdminNavComponent } from './admin-nav/admin-nav.component';
 import { MatListModule } from '@angular/material/list';
 import { MatTableModule } from '@angular/material/table';
 import { AdminListButtonsComponent } from './admin-list-buttons/admin-list-buttons.component';
+import { DeleteDialogWindowComponent } from './delete-dialog-window/delete-dialog-window.component';
+import { MatDialogModule } from '@angular/material/dialog';
 
 
 
@@ -19,12 +21,14 @@ import { AdminListButtonsComponent } from './admin-list-buttons/admin-list-butto
     ProxiesAdministrationComponent,
     AdminNavComponent,
     AdminListButtonsComponent,
+    DeleteDialogWindowComponent,
   ],
   imports: [
     CommonModule,
     AdminRoutingModule,
     MatListModule,
-    MatTableModule
+    MatTableModule,
+    MatDialogModule
   ]
 })
 export class AdminModule { }

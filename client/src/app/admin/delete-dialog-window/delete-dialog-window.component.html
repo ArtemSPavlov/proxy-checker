@@ -1,0 +1,8 @@
+<h1 mat-dialog-title>!!!</h1>
+<mat-dialog-content class="mat-typography">
+    <p>Are you sure you want to delete user {{user.login}}?</p>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close cdkFocusInitial>Cancel</button>
+    <button mat-button [mat-dialog-close]="user">Ok</button>
+</mat-dialog-actions>

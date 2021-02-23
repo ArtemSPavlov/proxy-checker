@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { User } from 'src/app/types/user.type';
 import { UsersAdministrationService } from './users-administration.service';
+import { MatDialog } from '@angular/material/dialog';
+import { DeleteDialogWindowComponent } from '../delete-dialog-window/delete-dialog-window.component';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-users-administration',
@@ -13,7 +16,8 @@ export class UsersAdministrationComponent implements OnInit {
   public displayedColumns: string[] = ['index', 'login', 'uuid', 'email', 'role', 'status', 'buttons'];
 
   constructor(
-    private usersAdministrationService: UsersAdministrationService
+    private usersAdministrationService: UsersAdministrationService,
+    public dialog: MatDialog
   ) { }
 
   ngOnInit(): void {
@@ -31,7 +35,7 @@ export class UsersAdministrationComponent implements OnInit {
       )
   }
 
-  updateUser(updatedUser: User): void{
+  private updateUser(updatedUser: User): void{
     this.usersList = this.usersList.map(user => {
       if(user.uuid === updatedUser.uuid){
         return updatedUser;
@@ -40,4 +44,32 @@ export class UsersAdministrationComponent implements OnInit {
     });
   }
 
+  private deleteUser(deletedUser: User): void{
+    this.usersList = this.usersList.filter(user => {
+      if(user.uuid !== deletedUser.uuid){
+        return user;
+      }
+    });
+  }
+
+  openDialog(user: User): void{
+    const dialogRef = this.dialog.open(DeleteDialogWindowComponent, {
+      width: '250px',
+      data: user
+    });
+
+    dialogRef
+      .afterClosed()
+      .pipe(
+        filter<User>(user => !!user)
+      )
+      .subscribe(result => {
+        this
+          .usersAdministrationService
+          .deleteUser(result)
+          .subscribe(
+            data => this.deleteUser(data)
+          )
+      });
+  }
 }
