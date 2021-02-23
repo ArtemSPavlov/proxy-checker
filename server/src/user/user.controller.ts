@@ -95,11 +95,12 @@ export class UserController {
         return this.userService.getUsersList();
     }
 
+    @UseInterceptors(ClassSerializerInterceptor)
     @Delete('delete/:id')
     @UseGuards(AdminGuard)
     async delete(
         @Param('id', ParseIntPipe) id: number,
-    ): Promise<string>{
+    ): Promise<User>{
 
         return this.userService.deleteUser(id);
     }

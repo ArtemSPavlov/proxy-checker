@@ -434,7 +434,8 @@ describe('Start e2e tests', () => {
           .set('Authorization', `Bearer ${adminTokens.access_token}`)
 
           expect(result.status).toEqual(200);
-          expect(result.text).toEqual('User test-user-5 deleted!');
+          expect(result.body.login).toEqual('test-user-5');
+          expect(result.body.email).toEqual('example-5@example.com');
       });
     });
 
