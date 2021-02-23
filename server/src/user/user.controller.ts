@@ -3,7 +3,6 @@ import {
     Controller,
     Get,
     Post,
-    UsePipes,
     UseGuards,
     Req,
     UseInterceptors,
@@ -22,7 +21,6 @@ import { User } from './user.entity';
 import { CreateUserDto } from './dto/createUser.dto';
 import { ValidateUserDto } from './dto/validateUser.dto';
 import { EditUserDto } from './dto/editUser.dto';
-import { EditUserLoginDto } from './dto/editUserLogin.dto';
 import { Tokens } from './types/tokens.type';
 import { RefreshTokenDto } from './dto/refreshToken.dto';
 
@@ -84,9 +82,9 @@ export class UserController {
     @UseGuards(AdminGuard)
     async edit(
         @Param('id', ParseIntPipe) id: number,
-        @Body() editUserLoginDto: EditUserLoginDto
+        @Body() requestBody: EditUserDto
     ): Promise<string>{
-        return this.userService.editUser(id, editUserLoginDto);
+        return this.userService.editUser(id, requestBody);
     }
 
     @Get('list')

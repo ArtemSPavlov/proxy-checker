@@ -58,4 +58,12 @@ export class ApiService {
       {responseType: 'text'}
     );
   }
+
+  changePassword(requestData: ValidateUserDto){
+    return this.http.patch(
+      this.apiUrl + "user",
+      requestData,
+      {responseType: 'text'}
+    );
+  }
 }

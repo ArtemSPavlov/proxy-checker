@@ -25,7 +25,9 @@ export class AppComponent implements OnInit {
     this.authorizedUser = this.store.pipe(
       select(selectSelectedUser)
     ).subscribe(
-      data => this.authorizedUser = data
+      data => {
+        this.authorizedUser = data;
+      }
     )
   }
 
@@ -36,6 +38,10 @@ export class AppComponent implements OnInit {
   logout(): void {
     this.userService.removeAuthorizedUser();
     this.router.navigate(['auth']);
+  }
+
+  isAdmin(): boolean{
+    return this.userService.checkAdminRight(this.authorizedUser);
   }
 
 }

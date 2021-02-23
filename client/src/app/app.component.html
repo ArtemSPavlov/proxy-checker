@@ -3,6 +3,9 @@
   <span class="spacer">
   </span>
   <div *ngIf="authorizedUser?.login; else authBlock">
+    <a *ngIf="isAdmin()" class="user_link" mat-button routerLink="admin">
+      <span>Administration</span>
+    </a>
     <a class="user_link" mat-button routerLink="user">
       <mat-icon class="user_icon" aria-hidden="false" aria-label="Example home icon">how_to_reg</mat-icon>
       <span>{{authorizedUser?.login}}</span>
@@ -11,6 +14,8 @@
       <mat-icon class="user_menu_icon" aria-hidden="false" aria-label="Example home icon">more_vert</mat-icon>
     </button>
     <mat-menu #menu="matMenu">
+      <a mat-menu-item routerLink="user">Edit</a>
+      <a mat-menu-item routerLink="user/change-password">Password</a>
       <button mat-menu-item (click)="logout()">Logout</button>
     </mat-menu>
   </div>
