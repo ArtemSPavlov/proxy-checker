@@ -358,7 +358,8 @@ describe('Start e2e tests', () => {
           })
 
           expect(result.status).toEqual(200);
-          expect(result.text).toEqual('User test-user-3 updated!');
+          expect(result.body.login).toEqual('test-user-1-changed');
+          expect(result.body.isActive).toEqual(true);
       });
     });
 

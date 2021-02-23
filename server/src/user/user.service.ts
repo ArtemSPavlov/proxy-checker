@@ -96,7 +96,7 @@ export class UserService {
         }
     }
 
-    async editUser(id: number, dto: EditUserDto): Promise<string>{
+    async editUser(id: number, dto: EditUserDto): Promise<User>{
         const user = await this.usersRepository.findOne(id);
 
         if(!user){
@@ -107,7 +107,7 @@ export class UserService {
             if(!updateResult.affected){
                 throw new InternalServerErrorException();
             } else {
-                return `User ${user.login} updated!`;
+                return this.usersRepository.findOne(id);
             }
         }
     }

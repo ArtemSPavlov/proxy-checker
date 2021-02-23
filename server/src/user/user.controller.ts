@@ -78,12 +78,13 @@ export class UserController {
         return this.userService.refreshTokens(token.refreshToken);
     }
 
+    @UseInterceptors(ClassSerializerInterceptor)
     @Put('edit/:id')
     @UseGuards(AdminGuard)
     async edit(
         @Param('id', ParseIntPipe) id: number,
         @Body() requestBody: EditUserDto
-    ): Promise<string>{
+    ): Promise<User>{
         return this.userService.editUser(id, requestBody);
     }
 
