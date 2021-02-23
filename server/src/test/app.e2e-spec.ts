@@ -80,6 +80,7 @@ describe('Start e2e tests', () => {
 
           expect(result.status).toEqual(200);
           expect(result.body.login).toEqual('test-user-1');
+          expect(result.body.password).toBeUndefined();
           expect(result.body.email).toEqual('example-1@example.com');
       });
 
@@ -358,7 +359,9 @@ describe('Start e2e tests', () => {
           })
 
           expect(result.status).toEqual(200);
-          expect(result.text).toEqual('User test-user-3 updated!');
+          expect(result.body.login).toEqual('test-user-1-changed');
+          expect(result.body.password).toBeUndefined();
+          expect(result.body.isActive).toEqual(true);
       });
     });
 
@@ -389,6 +392,7 @@ describe('Start e2e tests', () => {
 
           expect(result.status).toEqual(200);
           expect(result.body[0].login).toEqual('test-user-1');
+          expect(result.body[0].password).toBeUndefined();
           expect(result.body[2].email).toEqual('example-5@example.com');
       });
     });
@@ -433,7 +437,9 @@ describe('Start e2e tests', () => {
           .set('Authorization', `Bearer ${adminTokens.access_token}`)
 
           expect(result.status).toEqual(200);
-          expect(result.text).toEqual('User test-user-5 deleted!');
+          expect(result.body.login).toEqual('test-user-5');
+          expect(result.body.password).toBeUndefined();
+          expect(result.body.email).toEqual('example-5@example.com');
       });
     });
 

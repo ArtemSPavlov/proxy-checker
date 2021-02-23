@@ -96,7 +96,7 @@ export class UserService {
         }
     }
 
-    async editUser(id: number, dto: EditUserDto): Promise<string>{
+    async editUser(id: number, dto: EditUserDto): Promise<User>{
         const user = await this.usersRepository.findOne(id);
 
         if(!user){
@@ -107,7 +107,7 @@ export class UserService {
             if(!updateResult.affected){
                 throw new InternalServerErrorException();
             } else {
-                return `User ${user.login} updated!`;
+                return this.usersRepository.findOne(id);
             }
         }
     }
@@ -116,14 +116,13 @@ export class UserService {
         return await this.usersRepository.find();
     }
 
-    async deleteUser(id: number): Promise<string>{
+    async deleteUser(id: number): Promise<User>{
         const user = await this.usersRepository.findOne(id);
 
         if(!user){
             throw new BadRequestException('User not found!');
         } else {
-            const deletedUser = await this.usersRepository.remove(user);
-            return `User ${deletedUser.login} deleted!`;
+            return this.usersRepository.remove(user);
         }
     }
 

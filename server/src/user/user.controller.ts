@@ -25,10 +25,10 @@ import { Tokens } from './types/tokens.type';
 import { RefreshTokenDto } from './dto/refreshToken.dto';
 
 @Controller('user')
+@UseInterceptors(ClassSerializerInterceptor)
 export class UserController {
     constructor(private userService: UserService){}
 
-    @UseInterceptors(ClassSerializerInterceptor)
     @Get()
     @UseGuards(UserGuard)
     async userProfile(
@@ -83,13 +83,12 @@ export class UserController {
     async edit(
         @Param('id', ParseIntPipe) id: number,
         @Body() requestBody: EditUserDto
-    ): Promise<string>{
+    ): Promise<User>{
         return this.userService.editUser(id, requestBody);
     }
 
     @Get('list')
     @UseGuards(AdminGuard)
-    @UseInterceptors(ClassSerializerInterceptor)
     async listOfUsers(): Promise<User[]>{
         return this.userService.getUsersList();
     }
@@ -98,7 +97,7 @@ export class UserController {
     @UseGuards(AdminGuard)
     async delete(
         @Param('id', ParseIntPipe) id: number,
-    ): Promise<string>{
+    ): Promise<User>{
 
         return this.userService.deleteUser(id);
     }
