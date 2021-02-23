@@ -10,7 +10,8 @@ import { UsersAdministrationService } from '../users-administration/users-admini
 })
 export class AdminListButtonsComponent implements OnInit {
   @Input() user: User;
-  @Output() changeStatus = new EventEmitter();
+  @Output() changeStatus = new EventEmitter<User>();
+  @Output() deleteUser = new EventEmitter<User>();
 
   constructor(
     private usersAdministrationService: UsersAdministrationService
@@ -19,14 +20,17 @@ export class AdminListButtonsComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  changeActivityStatus(){
+  changeActivityStatus(): void{
     const response = this.usersAdministrationService.changeUserStatus(this.user, !this.user.isActive);
     response.subscribe(
       data => {
-        console.log('Data: ', data);
-        this.changeStatus.emit('Event');
+        this.changeStatus.emit(data);
       }
     )
+  }
+
+  removeCurrentUser(): void{
+    this.deleteUser.emit(this.user);
   }
 
 }

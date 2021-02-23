@@ -31,7 +31,7 @@ export class ErrorInterceptor implements HttpInterceptor {
                     return event;
                 },
                 error => {
-                    if(error instanceof HttpErrorResponse && error.status >= 400) {
+                    if(error.status >= 400) {
                         switch (error.status) {
                             case 401:
                                 this.router.navigate(['auth']);

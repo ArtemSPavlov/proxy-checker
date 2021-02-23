@@ -1,3 +1,4 @@
+import { map } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -18,14 +19,14 @@ export class UsersAdministrationService {
     this.apiUrl = this.configService.getConfig().server;
   }
 
-  getUsersList(): Observable<User>{
+  getUsersList(): Observable<User[]>{
     return this.http.get(
       this.apiUrl + 'user/list',
       {responseType: 'json'}
-    ) as Observable<User>;
+    ) as Observable<User[]>;
   }
 
-  changeUserStatus(user: User, newStatus: boolean){
+  changeUserStatus(user: User, newStatus: boolean): Observable<User>{
     const requestData = {
       login: user.login,
       isActive: newStatus
@@ -34,7 +35,22 @@ export class UsersAdministrationService {
     return this.http.put(
       this.apiUrl + `user/edit/${user.id}`,
       requestData,
-      {responseType: 'text'}
+      {responseType: 'json'}
+    ).pipe(
+      map(
+        data => data as User
+      )
+    );
+  }
+
+  deleteUser(user: User): Observable<User>{
+    return this.http.delete(
+      this.apiUrl + `user/delete/${user.id}`,
+      {responseType: 'json'}
+    ).pipe(
+      map(
+        data => data as User
+      )
     );
   }
 }
