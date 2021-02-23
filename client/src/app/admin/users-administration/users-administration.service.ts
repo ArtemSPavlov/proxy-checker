@@ -25,15 +25,16 @@ export class UsersAdministrationService {
     ) as Observable<User>;
   }
 
-  changeUserStatus(id: number, newStatus: boolean){
+  changeUserStatus(user: User, newStatus: boolean){
     const requestData = {
+      login: user.login,
       isActive: newStatus
     }
 
     return this.http.put(
-      this.apiUrl + `user/edit/${id}`,
+      this.apiUrl + `user/edit/${user.id}`,
       requestData,
-      {responseType: 'json'}
+      {responseType: 'text'}
     );
   }
 }

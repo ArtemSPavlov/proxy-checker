@@ -17,13 +17,18 @@ export class UsersAdministrationComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    const users = this.usersAdministrationService.getUsersList();
-    users.subscribe(
-      data => {
-        console.log('Users: ', data);
-        this.usersList = data;
-    }
-    )
+    this.getUsers();
+  }
+
+  getUsers(){
+    this
+      .usersAdministrationService
+      .getUsersList()
+      .subscribe(
+        data => {
+          this.usersList = data;
+        }
+      )
   }
 
 }

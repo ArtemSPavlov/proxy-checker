@@ -1,13 +1,13 @@
 <ul>
     <li>
-        <span class="user-list-button" *ngIf="!user?.isActive; else deactivateUser">
+        <span class="user-list-button" *ngIf="!user?.isActive; else deactivateUser" (click)="changeActivityStatus()">
             <span class="material-icons">
                 check
             </span>
             <span class="button-title">Activate</span>
         </span>
         <ng-template #deactivateUser>
-            <span class="user-list-button alert" href="">
+            <span class="user-list-button alert" (click)="changeActivityStatus()">
                 <span class="material-icons">
                     close
                 </span>
