@@ -25,10 +25,10 @@ import { Tokens } from './types/tokens.type';
 import { RefreshTokenDto } from './dto/refreshToken.dto';
 
 @Controller('user')
+@UseInterceptors(ClassSerializerInterceptor)
 export class UserController {
     constructor(private userService: UserService){}
 
-    @UseInterceptors(ClassSerializerInterceptor)
     @Get()
     @UseGuards(UserGuard)
     async userProfile(
@@ -78,7 +78,6 @@ export class UserController {
         return this.userService.refreshTokens(token.refreshToken);
     }
 
-    @UseInterceptors(ClassSerializerInterceptor)
     @Put('edit/:id')
     @UseGuards(AdminGuard)
     async edit(
@@ -90,12 +89,10 @@ export class UserController {
 
     @Get('list')
     @UseGuards(AdminGuard)
-    @UseInterceptors(ClassSerializerInterceptor)
     async listOfUsers(): Promise<User[]>{
         return this.userService.getUsersList();
     }
 
-    @UseInterceptors(ClassSerializerInterceptor)
     @Delete('delete/:id')
     @UseGuards(AdminGuard)
     async delete(
