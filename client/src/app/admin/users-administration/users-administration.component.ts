@@ -14,6 +14,7 @@ export class UsersAdministrationComponent implements OnInit {
 
   public usersList: User[];
   public displayedColumns: string[] = ['index', 'login', 'uuid', 'email', 'role', 'status', 'buttons'];
+  public message: string;
 
   constructor(
     private usersAdministrationService: UsersAdministrationService,
@@ -40,6 +41,7 @@ export class UsersAdministrationComponent implements OnInit {
       if(user.uuid === updatedUser.uuid){
         return updatedUser;
       }
+      this.message = `User ${updatedUser.login} status changed to ${updatedUser.isActive ? "Active" : "Unactive"}`;
       return user;
     });
   }
@@ -49,6 +51,7 @@ export class UsersAdministrationComponent implements OnInit {
       if(user.uuid !== deletedUser.uuid){
         return user;
       }
+      this.message = `User ${deletedUser.login} deleted`;
     });
   }
 
