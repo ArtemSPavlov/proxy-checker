@@ -1,0 +1,72 @@
+<mat-dialog-content class="mat-typography">
+  <mat-card class="align-center form-card">
+    <mat-card-title class="text-center">Create new user</mat-card-title>
+    <mat-card-content>
+
+      <form class="align-center" [formGroup]="form" (submit)="login()" (change)="onFormChange()">
+        <mat-form-field>
+          <input matInput placeholder="Name" formControlName="login" required minlength="3"/>
+          <mat-error *ngIf="form.controls.login.hasError('minlength') && !form.controls.login.hasError('required')">
+            Login is less than {{form.controls.login.errors.minlength.requiredLength}} characters
+          </mat-error>
+          <mat-error *ngIf="form.controls.login.hasError('required')">
+            Login is <strong>required</strong>
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput placeholder="E-mail" formControlName="email" required email/>
+          <mat-error *ngIf="form.controls.email.hasError('email') && !form.controls.email.hasError('required')">
+            Please enter a valid email address
+          </mat-error>
+          <mat-error *ngIf="form.controls.email.hasError('required')">
+            Email is <strong>required</strong>
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field>
+          <input type="password" matInput placeholder="Password" formControlName="password" required minlength="3"/>
+          <mat-error *ngIf="form.controls.password.hasError('minlength') && !form.controls.password.hasError('required')">
+            Password is less than {{form.controls.password.errors.minlength.requiredLength}} characters
+          </mat-error>
+          <mat-error *ngIf="form.controls.password.hasError('required')">
+            Password is <strong>required</strong>
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field>
+          <input type="password" matInput placeholder="Confirm password" formControlName="confirmPassword" required minlength="3"/>
+          <mat-error *ngIf="form.controls.confirmPassword.hasError('minlength') && !form.controls.password.hasError('required')">
+            Password is less than {{form.controls.confirmPassword.errors.minlength.requiredLength}} characters
+          </mat-error>
+          <mat-error *ngIf="form.controls.confirmPassword.hasError('required')">
+            Confirm password is <strong>required</strong>
+          </mat-error>
+        </mat-form-field>
+        <mat-error class="form-error">
+          <span *ngIf="form.errors?.passwordNotMatch">Password not confirmed!</span>
+        </mat-error>
+        <mat-card-subtitle class="error-message">
+          <span *ngIf="error">
+            {{ error?.statusText }}
+          </span>
+        </mat-card-subtitle>
+        <div>
+          <button
+            class="close-button"
+            mat-button
+            mat-dialog-close
+            cdkFocusInitial>Exit</button>
+          <button
+            class="submit-button"
+            type="submit"
+            mat-raised-button
+            color="primary"
+            [disabled]="!this.form.valid"
+            [mat-dialog-close]="true"
+          >Submit</button>
+        </div>
+      </form>
+
+    </mat-card-content>
+  </mat-card>
+
+</mat-dialog-content>
+

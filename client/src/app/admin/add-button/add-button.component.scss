@@ -1,0 +1,21 @@
+.add-button {
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 0px 20px;
+  cursor: pointer;
+  line-height: 40px;
+  text-transform: uppercase;
+  background-color: green;
+  transition: background-color .3s ease;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.add-button:hover {
+  background-color: lighten(green, 5%);
+}
+
+.add-icon {
+  margin-right: 10px;
+}

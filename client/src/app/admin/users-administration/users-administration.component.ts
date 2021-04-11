@@ -1,3 +1,4 @@
+import { AddDialogWindowComponent } from './../add-dialog-window/add-dialog-window.component';
 import { Component, OnInit } from '@angular/core';
 import { User } from 'src/app/types/user.type';
 import { UsersAdministrationService } from './users-administration.service';
@@ -55,7 +56,7 @@ export class UsersAdministrationComponent implements OnInit {
     });
   }
 
-  openDialog(user: User): void{
+  openDeleteDialog(user: User): void{
     const dialogRef = this.dialog.open(DeleteDialogWindowComponent, {
       width: '250px',
       data: user
@@ -74,5 +75,25 @@ export class UsersAdministrationComponent implements OnInit {
             data => this.deleteUser(data)
           )
       });
+  }
+
+  openAddDialog(): void{
+    const dialogRef = this.dialog.open(AddDialogWindowComponent, {
+      width: '500px'
+    });
+
+    // dialogRef
+    //   .afterClosed()
+    //   .pipe(
+    //     filter<User>(user => !!user)
+    //   )
+    //   .subscribe(result => {
+    //     this
+    //       .usersAdministrationService
+    //       .deleteUser(result)
+    //       .subscribe(
+    //         data => this.deleteUser(data)
+    //       )
+    //   });
   }
 }

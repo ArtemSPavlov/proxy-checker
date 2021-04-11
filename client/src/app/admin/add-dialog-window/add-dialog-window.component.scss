@@ -1,0 +1,32 @@
+.mat-card {
+  padding-top: 50px;
+  box-shadow: none;
+}
+
+.mat-card-title {
+  text-transform: uppercase;
+  margin-bottom: 50px;
+}
+
+.form-card {
+  display: flex;
+  min-height: 100%;
+}
+
+.error-message {
+  color: red;
+  height: 20px;
+}
+
+.form-error {
+  height: 20px;
+  margin-top: 20px;
+}
+
+.mat-form-field {
+  margin-bottom: 5px;
+}
+
+.close-button {
+  margin-right: 15px;
+}
